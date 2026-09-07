@@ -3,33 +3,39 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PDF to QR Code Generator — Scan It, Your PDF Opens</title>
-<meta name="description" content="Turn any PDF into a scannable QR code. Runs entirely in your browser — no upload, no account. Includes a step-by-step guide to hosting your PDF on GitHub Pages so the QR code always points to it.">
-<meta name="keywords" content="pdf to qr code, pdf qr code generator, qr code for pdf, convert pdf to qr code, scan pdf qr code, github pages pdf qr code">
+
+<title>PDF to QR Code Generator — Upload PDF & Create QR</title>
+
+<meta name="description" content="Upload a PDF, store it on GitHub Pages, and instantly generate a QR code that opens the PDF.">
+<meta name="keywords" content="pdf to qr code, pdf qr code generator, qr code for pdf, convert pdf to qr code, github pages pdf qr code">
+
 <link rel="canonical" href="https://pdf-to-qr-code-generator.github.io/">
+
 <meta name="author" content="PDF to QR Code Generator">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0E2A4A">
 
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
 <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon.png">
 <link rel="apple-touch-icon" href="/assets/favicon.png">
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="PDF to QR Code Generator — Scan It, Your PDF Opens">
-<meta property="og:description" content="Turn any PDF into a scannable QR code, entirely in your browser. Free step-by-step guide to hosting the PDF on GitHub Pages included.">
+<meta property="og:title" content="PDF to QR Code Generator">
+<meta property="og:description" content="Upload a PDF and create a QR code that opens the hosted PDF.">
 <meta property="og:url" content="https://pdf-to-qr-code-generator.github.io/">
 <meta property="og:image" content="https://pdf-to-qr-code-generator.github.io/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:site_name" content="PDF to QR Code Generator">
+
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="PDF to QR Code Generator — Scan It, Your PDF Opens">
-<meta name="twitter:description" content="Turn any PDF into a scannable QR code. No upload, no account — runs entirely in your browser.">
+<meta name="twitter:title" content="PDF to QR Code Generator">
+<meta name="twitter:description" content="Upload a PDF and create a QR code that opens the hosted PDF.">
 <meta name="twitter:image" content="https://pdf-to-qr-code-generator.github.io/assets/og-image.png">
-<meta name="robots" content="index, follow">
-<meta name="theme-color" content="#0E2A4A">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
 
 <script type="application/ld+json">
@@ -39,723 +45,2739 @@
   "name": "PDF to QR Code Generator",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any",
-  "description": "A free, browser-only tool that generates a QR code linking to a hosted PDF, or embeds very small PDFs directly inside the QR code.",
-  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
-    {
-      "@type": "Question",
-      "name": "Can a QR code actually contain an entire PDF file?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Only if the PDF is very small, roughly under 1.5 KB. QR codes top out around 2 to 3 KB of raw data, and most real PDFs — resumes, menus, manuals — are far larger. For anything bigger, the QR code holds a link to the PDF instead of the file itself, which is what this tool does by default." }
-    },
-    {
-      "@type": "Question",
-      "name": "Does this tool upload my PDF?",
-      "acceptedAnswer": { "@type": "Answer", "text": "No. The PDF is read locally in your browser to check its size and generate the QR code. Nothing is sent to a server unless you separately choose to upload it yourself, for example to your own GitHub repository." }
-    },
-    {
-      "@type": "Question",
-      "name": "Why does my QR code lead to a broken link?",
-      "acceptedAnswer": { "@type": "Answer", "text": "The most common causes are: the PDF hasn't been committed to the repository yet, the filename doesn't exactly match what you typed including capitalization, GitHub Pages hasn't finished redeploying yet which usually takes a minute or two, or the folder path in the URL doesn't match where the file actually lives." }
-    },
-    {
-      "@type": "Question",
-      "name": "What filename should I give my PDF?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Use lowercase letters, numbers, and hyphens only, with no spaces, and keep the .pdf extension. This tool suggests a safe filename automatically based on the file you select, and that exact name is what needs to match the URL encoded in the QR code." }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I use a custom domain instead of github.io?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Yes. Just replace the URL in the generator's link field with wherever the PDF will actually be hosted, whether that's a github.io address, a custom domain pointed at GitHub Pages, or any other file host." }
-    },
-    {
-      "@type": "Question",
-      "name": "Will the QR code work before I upload the PDF?",
-      "acceptedAnswer": { "@type": "Answer", "text": "Not if you're using the link method. The QR code encodes a URL, and that URL will 404 until the actual PDF file exists at that exact path in your live repository." }
-    }
-  ]
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "HowTo",
-  "name": "How to host a PDF on GitHub Pages and generate a working QR code",
-  "step": [
-    { "@type": "HowToStep", "name": "Create a files folder", "text": "In your GitHub Pages repository, create a folder named files in the root directory." },
-    { "@type": "HowToStep", "name": "Add your PDF", "text": "Upload your PDF into the files folder using the exact lowercase, hyphenated filename the generator suggests." },
-    { "@type": "HowToStep", "name": "Commit the change", "text": "Commit directly to your main branch, or merge a pull request if you use one." },
-    { "@type": "HowToStep", "name": "Wait for Pages to redeploy", "text": "GitHub Pages rebuilds automatically after a commit, which usually takes about a minute." },
-    { "@type": "HowToStep", "name": "Generate and test the QR code", "text": "Enter the full public URL to the PDF into the generator, create the QR code, and scan it to confirm the PDF opens." }
-  ]
+  "description": "Upload a PDF and generate a QR code linking directly to the hosted PDF.",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
 }
 </script>
 
 <style>
-  :root{
-    --bp: #0E2A4A;
-    --bp-2: #123859;
-    --bp-3: #17456E;
-    --grid: #1E4870;
-    --ink: #F5F7FA;
-    --ink-dim: #AEC4D8;
-    --laser: #FF5A5F;
-    --amber: #FFB020;
-    --mint: #3ED6B5;
-    --radius: 12px;
+:root{
+  --bp:#0E2A4A;
+  --bp-2:#123859;
+  --bp-3:#17456E;
+  --grid:#1E4870;
+  --ink:#F5F7FA;
+  --ink-dim:#AEC4D8;
+  --laser:#FF5A5F;
+  --amber:#FFB020;
+  --mint:#3ED6B5;
+  --radius:12px;
+}
+
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  background:var(--bp);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',sans-serif;
+  line-height:1.6;
+
+  background-image:
+    linear-gradient(var(--grid) 1px,transparent 1px),
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+
+  background-size:42px 42px;
+  background-position:-1px -1px;
+}
+
+h1,h2,h3,.display{
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;
+  margin:0;
+  color:var(--ink);
+}
+
+code,.mono{
+  font-family:'IBM Plex Mono',monospace;
+}
+
+a{
+  color:var(--mint);
+}
+
+.wrap{
+  max-width:1080px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible{
+  outline:2px solid var(--mint);
+  outline-offset:2px;
+}
+
+/* HEADER */
+
+header.site{
+  position:sticky;
+  top:0;
+  z-index:50;
+
+  background:rgba(14,42,74,.94);
+  backdrop-filter:blur(8px);
+
+  border-bottom:1px solid var(--grid);
+}
+
+.nav{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  padding:14px 24px;
+
+  max-width:1080px;
+  margin:0 auto;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  font-family:'Space Grotesk',sans-serif;
+  font-weight:700;
+  font-size:1.1rem;
+
+  color:var(--ink);
+  text-decoration:none;
+}
+
+.brand .mark{
+  width:26px;
+  height:26px;
+}
+
+.nav-links{
+  display:flex;
+  gap:22px;
+
+  list-style:none;
+  margin:0;
+  padding:0;
+}
+
+.nav-links a{
+  color:var(--ink-dim);
+  text-decoration:none;
+  font-size:.95rem;
+}
+
+.nav-links a:hover{
+  color:var(--ink);
+}
+
+.nav-toggle{
+  display:none;
+  background:none;
+  border:1px solid var(--grid);
+  color:var(--ink);
+  border-radius:6px;
+  padding:6px 10px;
+}
+
+@media(max-width:760px){
+
+  .nav-links{
+    display:none;
   }
-  *{ box-sizing:border-box; }
-  html{ scroll-behavior:smooth; }
-  body{
-    margin:0; background:var(--bp); color:var(--ink);
-    font-family:'IBM Plex Sans', sans-serif; line-height:1.6;
-    background-image:
-      linear-gradient(var(--grid) 1px, transparent 1px),
-      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
-    background-size: 42px 42px;
-    background-position: -1px -1px;
-  }
-  h1,h2,h3,.display{ font-family:'Space Grotesk', sans-serif; font-weight:700; margin:0; color:var(--ink); }
-  code, .mono{ font-family:'IBM Plex Mono', monospace; }
-  a{ color: var(--mint); }
-  .wrap{ max-width:1080px; margin:0 auto; padding:0 24px; }
-  img,svg{ display:block; max-width:100%; }
-  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible{ outline:2px solid var(--mint); outline-offset:2px; }
-  @media (prefers-reduced-motion: reduce){ *{ animation-duration:0.001ms !important; transition-duration:0.001ms !important; } }
 
-  header.site{ position:sticky; top:0; z-index:50; background:rgba(14,42,74,0.92); backdrop-filter:blur(8px); border-bottom:1px solid var(--grid); }
-  .nav{ display:flex; align-items:center; justify-content:space-between; padding:14px 24px; max-width:1080px; margin:0 auto; }
-  .brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1.1rem; color:var(--ink); text-decoration:none; }
-  .brand .mark{ width:26px; height:26px; }
-  .nav-links{ display:flex; gap:22px; list-style:none; margin:0; padding:0; }
-  .nav-links a{ color:var(--ink-dim); text-decoration:none; font-size:0.95rem; }
-  .nav-links a:hover{ color:var(--ink); }
-  .nav-toggle{ display:none; background:none; border:1px solid var(--grid); color:var(--ink); border-radius:6px; padding:6px 10px; }
-  @media (max-width:760px){
-    .nav-links{ display:none; }
-    .nav-toggle{ display:inline-block; }
-    .nav-links.open{ display:flex; flex-direction:column; position:absolute; top:56px; right:24px; background:var(--bp-2); border:1px solid var(--grid); padding:14px; border-radius:10px; gap:12px; }
+  .nav-toggle{
+    display:inline-block;
   }
 
-  .hero{ padding:60px 0 36px; }
-  .hero-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:40px; align-items:center; }
-  @media (max-width:860px){ .hero-grid{ grid-template-columns:1fr; } }
-  .hero h1{ font-size:clamp(2rem,4.2vw,3rem); line-height:1.08; letter-spacing:-0.01em; }
-  .hero p.lede{ color:var(--ink-dim); font-size:1.08rem; max-width:48ch; margin-top:16px; }
-  .hero-cta{ margin-top:26px; display:flex; gap:14px; flex-wrap:wrap; }
-  .btn{ display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:8px; text-decoration:none; font-weight:600; font-size:0.95rem; border:1px solid transparent; cursor:pointer; }
-  .btn-primary{ background:var(--mint); color:#06231E; }
-  .btn-primary:hover{ background:#59e6c8; }
-  .btn-ghost{ border-color:var(--grid); color:var(--ink); background:transparent; }
-  .btn-ghost:hover{ border-color:var(--mint); }
-  .btn:disabled{ opacity:0.45; cursor:not-allowed; }
+  .nav-links.open{
+    display:flex;
+    flex-direction:column;
 
-  .hero-svg{ justify-self:center; }
-  .scanline{ animation: scan 2.6s ease-in-out 0.4s 1 both; }
-  @keyframes scan{ 0%{ transform:translateY(-70px); opacity:0; } 15%{ opacity:1; } 85%{ opacity:1; } 100%{ transform:translateY(70px); opacity:0; } }
+    position:absolute;
+    top:56px;
+    right:24px;
 
-  section{ padding:52px 0; border-top:1px solid var(--grid); }
-  .section-head{ margin-bottom:28px; max-width:62ch; }
-  .section-head h2{ font-size:clamp(1.4rem,2.4vw,1.9rem); }
-  .section-head p{ color:var(--ink-dim); margin-top:10px; }
+    background:var(--bp-2);
+    border:1px solid var(--grid);
 
-  .prose p{ color:var(--ink-dim); font-size:1.02rem; margin-top:14px; }
-  .prose p:first-child{ margin-top:0; }
-  .prose strong{ color:var(--ink); }
+    padding:14px;
+    border-radius:10px;
 
-  /* ---------- GENERATOR ---------- */
-  .gen-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; align-items:start; }
-  @media (max-width:860px){ .gen-grid{ grid-template-columns:1fr; } }
-
-  .card{ background:var(--bp-2); border:1px solid var(--grid); border-radius:var(--radius); padding:22px; }
-  .card h3{ font-size:1.05rem; display:flex; align-items:center; gap:8px; }
-  .card h3 .step-num{ width:24px; height:24px; border-radius:50%; background:var(--bp-3); color:var(--mint); font-family:'Space Grotesk',sans-serif; font-size:0.85rem; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0; }
-
-  .dropzone{
-    margin-top:16px; border:2px dashed var(--grid); border-radius:10px; padding:28px 16px; text-align:center;
-    cursor:pointer; transition:border-color 0.15s ease, background 0.15s ease;
+    gap:12px;
   }
-  .dropzone:hover, .dropzone.drag{ border-color:var(--mint); background:rgba(62,214,181,0.05); }
-  .dropzone p{ color:var(--ink-dim); font-size:0.92rem; margin:6px 0 0; }
-  .dropzone .icon{ color:var(--mint); }
-  #fileInput{ display:none; }
+}
 
-  .file-info{ margin-top:14px; display:none; flex-direction:column; gap:8px; }
-  .file-info.show{ display:flex; }
-  .file-row{ display:flex; justify-content:space-between; align-items:center; background:var(--bp); border:1px solid var(--grid); border-radius:8px; padding:10px 12px; font-size:0.88rem; }
-  .file-row .name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%; }
-  .badge{ font-size:0.75rem; padding:2px 9px; border-radius:20px; font-weight:600; }
-  .badge.ok{ background:rgba(62,214,181,0.15); color:var(--mint); }
-  .badge.warn{ background:rgba(255,176,32,0.16); color:var(--amber); }
-  .badge.bad{ background:rgba(255,90,95,0.16); color:var(--laser); }
+/* HERO */
 
-  .field{ margin-top:14px; }
-  .field label{ display:block; font-size:0.85rem; color:var(--ink-dim); margin-bottom:6px; }
-  .field-row{ display:flex; gap:8px; }
-  .field input[type=text]{ flex:1; background:var(--bp); border:1px solid var(--grid); color:var(--ink); padding:10px 12px; border-radius:8px; font-size:0.92rem; font-family:'IBM Plex Mono',monospace; }
-  .copy-btn{ background:var(--bp-3); border:1px solid var(--grid); color:var(--ink); border-radius:8px; padding:0 14px; font-size:0.85rem; cursor:pointer; }
-  .copy-btn:hover{ border-color:var(--mint); }
+.hero{
+  padding:60px 0 36px;
+}
 
-  .mode-toggle{ display:flex; gap:8px; margin-top:16px; }
-  .mode-btn{ flex:1; background:var(--bp); border:1px solid var(--grid); color:var(--ink-dim); border-radius:8px; padding:10px 12px; font-size:0.85rem; cursor:pointer; text-align:center; }
-  .mode-btn.active{ border-color:var(--mint); color:var(--ink); background:rgba(62,214,181,0.08); }
-  .mode-btn:disabled{ opacity:0.4; cursor:not-allowed; }
-  .mode-note{ color:var(--ink-dim); font-size:0.82rem; margin-top:8px; }
+.hero-grid{
+  display:grid;
+  grid-template-columns:1.1fr .9fr;
 
-  .generate-btn{ width:100%; margin-top:18px; padding:13px; }
+  gap:40px;
+  align-items:center;
+}
 
-  .output-card{ text-align:center; }
-  .qr-holder{ background:#fff; display:inline-block; padding:16px; border-radius:10px; margin-top:16px; min-height:60px; }
-  .qr-holder canvas{ display:block; }
-  .qr-placeholder{ color:var(--ink-dim); font-size:0.9rem; padding:40px 20px; }
-  .output-actions{ display:flex; gap:10px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
-  .error-msg{ color:var(--laser); font-size:0.88rem; margin-top:12px; display:none; }
-  .error-msg.show{ display:block; }
-
-  /* ---------- STEPS ---------- */
-  .steps{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
-  @media (max-width:780px){ .steps{ grid-template-columns:1fr; } }
-  .step{ background:var(--bp-2); border:1px solid var(--grid); border-radius:var(--radius); padding:20px; }
-  .step .num{ font-family:'Space Grotesk',sans-serif; color:var(--mint); font-size:1.4rem; }
-  .step h3{ font-size:1.02rem; margin-top:8px; }
-  .step p{ color:var(--ink-dim); font-size:0.92rem; margin-top:6px; }
-
-  .stepper-list{ counter-reset: sc; list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:14px; }
-  .stepper-list li{ counter-increment: sc; background:var(--bp-2); border:1px solid var(--grid); border-radius:var(--radius); padding:16px 18px 16px 54px; position:relative; }
-  .stepper-list li::before{
-    content: counter(sc); position:absolute; left:16px; top:16px; width:26px; height:26px; border-radius:50%;
-    background:var(--bp-3); color:var(--mint); font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:0.85rem;
-    display:flex; align-items:center; justify-content:center;
+@media(max-width:860px){
+  .hero-grid{
+    grid-template-columns:1fr;
   }
-  .stepper-list h3{ font-size:1rem; }
-  .stepper-list p{ color:var(--ink-dim); font-size:0.9rem; margin-top:4px; }
-  .stepper-list code{ background:var(--bp); border:1px solid var(--grid); padding:2px 6px; border-radius:4px; font-size:0.85rem; }
+}
 
-  /* ---------- USE CASES ---------- */
-  .usecases{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; }
-  .usecase{ background:var(--bp-2); border:1px solid var(--grid); border-radius:10px; padding:16px; }
-  .usecase h3{ font-size:0.95rem; }
-  .usecase p{ color:var(--ink-dim); font-size:0.85rem; margin-top:6px; }
+.hero h1{
+  font-size:clamp(2rem,4.2vw,3rem);
+  line-height:1.08;
+}
 
-  /* ---------- FAQ ---------- */
-  .faq-item{ border-bottom:1px solid var(--grid); padding:16px 0; }
-  .faq-q{ display:flex; justify-content:space-between; align-items:center; cursor:pointer; font-weight:600; font-size:1rem; gap:16px; }
-  .faq-q .chev{ color:var(--mint); transition:transform 0.2s ease; flex-shrink:0; }
-  .faq-item.open .chev{ transform:rotate(45deg); }
-  .faq-a{ max-height:0; overflow:hidden; color:var(--ink-dim); font-size:0.94rem; transition:max-height 0.25s ease; }
-  .faq-item.open .faq-a{ max-height:240px; margin-top:10px; }
+.hero p.lede{
+  color:var(--ink-dim);
+  font-size:1.08rem;
+  max-width:48ch;
+  margin-top:16px;
+}
 
-  footer{ border-top:1px solid var(--grid); padding:34px 0; color:var(--ink-dim); font-size:0.85rem; }
-  footer .foot-grid{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:16px; }
-  footer a{ color:var(--ink-dim); }
-  footer a:hover{ color:var(--mint); }
-  .disclaimer{ margin-top:18px; padding-top:18px; border-top:1px solid var(--grid); font-size:0.78rem; opacity:0.85; }
+.hero-cta{
+  margin-top:26px;
+  display:flex;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+
+  padding:12px 20px;
+
+  border-radius:8px;
+
+  text-decoration:none;
+
+  font-weight:600;
+  font-size:.95rem;
+
+  border:1px solid transparent;
+
+  cursor:pointer;
+}
+
+.btn-primary{
+  background:var(--mint);
+  color:#06231E;
+}
+
+.btn-primary:hover{
+  background:#59e6c8;
+}
+
+.btn-ghost{
+  border-color:var(--grid);
+  color:var(--ink);
+  background:transparent;
+}
+
+.btn-ghost:hover{
+  border-color:var(--mint);
+}
+
+.btn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+}
+
+/* SECTIONS */
+
+section{
+  padding:52px 0;
+  border-top:1px solid var(--grid);
+}
+
+.section-head{
+  margin-bottom:28px;
+  max-width:62ch;
+}
+
+.section-head h2{
+  font-size:clamp(1.4rem,2.4vw,1.9rem);
+}
+
+.section-head p{
+  color:var(--ink-dim);
+  margin-top:10px;
+}
+
+.prose p{
+  color:var(--ink-dim);
+  font-size:1.02rem;
+  margin-top:14px;
+}
+
+.prose p:first-child{
+  margin-top:0;
+}
+
+.prose strong{
+  color:var(--ink);
+}
+
+/* GENERATOR */
+
+.gen-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  gap:22px;
+
+  align-items:start;
+}
+
+@media(max-width:860px){
+  .gen-grid{
+    grid-template-columns:1fr;
+  }
+}
+
+.card{
+  background:var(--bp-2);
+  border:1px solid var(--grid);
+  border-radius:var(--radius);
+  padding:22px;
+}
+
+.card h3{
+  font-size:1.05rem;
+
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.step-num{
+  width:24px;
+  height:24px;
+
+  border-radius:50%;
+
+  background:var(--bp-3);
+
+  color:var(--mint);
+
+  font-family:'Space Grotesk',sans-serif;
+  font-size:.85rem;
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  flex-shrink:0;
+}
+
+.dropzone{
+  margin-top:16px;
+
+  border:2px dashed var(--grid);
+
+  border-radius:10px;
+
+  padding:28px 16px;
+
+  text-align:center;
+
+  cursor:pointer;
+
+  transition:border-color .15s ease,
+             background .15s ease;
+}
+
+.dropzone:hover,
+.dropzone.drag{
+  border-color:var(--mint);
+  background:rgba(62,214,181,.05);
+}
+
+.dropzone p{
+  color:var(--ink-dim);
+  font-size:.92rem;
+  margin:6px 0 0;
+}
+
+.dropzone .icon{
+  color:var(--mint);
+}
+
+#fileInput{
+  display:none;
+}
+
+.file-info{
+  margin-top:14px;
+
+  display:none;
+
+  flex-direction:column;
+  gap:8px;
+}
+
+.file-info.show{
+  display:flex;
+}
+
+.file-row{
+  display:flex;
+
+  justify-content:space-between;
+  align-items:center;
+
+  background:var(--bp);
+
+  border:1px solid var(--grid);
+
+  border-radius:8px;
+
+  padding:10px 12px;
+
+  font-size:.88rem;
+}
+
+.file-row .name{
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+
+  max-width:60%;
+}
+
+.badge{
+  font-size:.75rem;
+  padding:2px 9px;
+  border-radius:20px;
+  font-weight:600;
+}
+
+.badge.ok{
+  background:rgba(62,214,181,.15);
+  color:var(--mint);
+}
+
+.badge.warn{
+  background:rgba(255,176,32,.16);
+  color:var(--amber);
+}
+
+.badge.bad{
+  background:rgba(255,90,95,.16);
+  color:var(--laser);
+}
+
+.field{
+  margin-top:14px;
+}
+
+.field label{
+  display:block;
+
+  font-size:.85rem;
+  color:var(--ink-dim);
+
+  margin-bottom:6px;
+}
+
+.field-row{
+  display:flex;
+  gap:8px;
+}
+
+.field input[type=text]{
+  flex:1;
+
+  min-width:0;
+
+  background:var(--bp);
+
+  border:1px solid var(--grid);
+
+  color:var(--ink);
+
+  padding:10px 12px;
+
+  border-radius:8px;
+
+  font-size:.92rem;
+
+  font-family:'IBM Plex Mono',monospace;
+}
+
+.copy-btn{
+  background:var(--bp-3);
+
+  border:1px solid var(--grid);
+
+  color:var(--ink);
+
+  border-radius:8px;
+
+  padding:0 14px;
+
+  font-size:.85rem;
+
+  cursor:pointer;
+}
+
+.copy-btn:hover{
+  border-color:var(--mint);
+}
+
+.generate-btn{
+  width:100%;
+  margin-top:18px;
+  padding:13px;
+}
+
+.mode-note{
+  color:var(--ink-dim);
+  font-size:.85rem;
+  margin-top:8px;
+}
+
+.output-card{
+  text-align:center;
+}
+
+.qr-holder{
+  background:#fff;
+
+  display:inline-flex;
+
+  align-items:center;
+  justify-content:center;
+
+  padding:16px;
+
+  border-radius:10px;
+
+  margin-top:16px;
+
+  min-height:292px;
+  min-width:292px;
+}
+
+.qr-holder canvas{
+  display:block;
+}
+
+.qr-placeholder{
+  color:#6b7c8c;
+  font-size:.9rem;
+  padding:40px 20px;
+}
+
+.output-actions{
+  display:flex;
+
+  gap:10px;
+
+  justify-content:center;
+
+  margin-top:16px;
+
+  flex-wrap:wrap;
+}
+
+.error-msg{
+  color:var(--laser);
+
+  font-size:.88rem;
+
+  margin-top:12px;
+
+  display:none;
+}
+
+.error-msg.show{
+  display:block;
+}
+
+.success-msg{
+  color:var(--mint);
+
+  font-size:.88rem;
+
+  margin-top:12px;
+
+  display:none;
+}
+
+.success-msg.show{
+  display:block;
+}
+
+/* STEPS */
+
+.steps{
+  display:grid;
+
+  grid-template-columns:repeat(3,1fr);
+
+  gap:20px;
+}
+
+@media(max-width:780px){
+  .steps{
+    grid-template-columns:1fr;
+  }
+}
+
+.step{
+  background:var(--bp-2);
+
+  border:1px solid var(--grid);
+
+  border-radius:var(--radius);
+
+  padding:20px;
+}
+
+.step .num{
+  font-family:'Space Grotesk',sans-serif;
+
+  color:var(--mint);
+
+  font-size:1.4rem;
+}
+
+.step h3{
+  font-size:1.02rem;
+  margin-top:8px;
+}
+
+.step p{
+  color:var(--ink-dim);
+
+  font-size:.92rem;
+
+  margin-top:6px;
+}
+
+/* HOST */
+
+.stepper-list{
+  counter-reset:sc;
+
+  list-style:none;
+
+  margin:0;
+  padding:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:14px;
+}
+
+.stepper-list li{
+  counter-increment:sc;
+
+  background:var(--bp-2);
+
+  border:1px solid var(--grid);
+
+  border-radius:var(--radius);
+
+  padding:16px 18px 16px 54px;
+
+  position:relative;
+}
+
+.stepper-list li::before{
+  content:counter(sc);
+
+  position:absolute;
+
+  left:16px;
+  top:16px;
+
+  width:26px;
+  height:26px;
+
+  border-radius:50%;
+
+  background:var(--bp-3);
+
+  color:var(--mint);
+
+  font-family:'Space Grotesk',sans-serif;
+
+  font-weight:700;
+  font-size:.85rem;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+}
+
+.stepper-list h3{
+  font-size:1rem;
+}
+
+.stepper-list p{
+  color:var(--ink-dim);
+
+  font-size:.9rem;
+
+  margin-top:4px;
+}
+
+.stepper-list code{
+  background:var(--bp);
+
+  border:1px solid var(--grid);
+
+  padding:2px 6px;
+
+  border-radius:4px;
+
+  font-size:.85rem;
+}
+
+/* USE CASES */
+
+.usecases{
+  display:grid;
+
+  grid-template-columns:
+    repeat(auto-fit,minmax(190px,1fr));
+
+  gap:14px;
+}
+
+.usecase{
+  background:var(--bp-2);
+
+  border:1px solid var(--grid);
+
+  border-radius:10px;
+
+  padding:16px;
+}
+
+.usecase h3{
+  font-size:.95rem;
+}
+
+.usecase p{
+  color:var(--ink-dim);
+
+  font-size:.85rem;
+
+  margin-top:6px;
+}
+
+/* FAQ */
+
+.faq-item{
+  border-bottom:1px solid var(--grid);
+
+  padding:16px 0;
+}
+
+.faq-q{
+  display:flex;
+
+  justify-content:space-between;
+
+  align-items:center;
+
+  cursor:pointer;
+
+  font-weight:600;
+
+  font-size:1rem;
+
+  gap:16px;
+}
+
+.faq-q .chev{
+  color:var(--mint);
+
+  transition:transform .2s ease;
+
+  flex-shrink:0;
+}
+
+.faq-item.open .chev{
+  transform:rotate(45deg);
+}
+
+.faq-a{
+  max-height:0;
+
+  overflow:hidden;
+
+  color:var(--ink-dim);
+
+  font-size:.94rem;
+
+  transition:max-height .25s ease;
+}
+
+.faq-item.open .faq-a{
+  max-height:300px;
+
+  margin-top:10px;
+}
+
+/* FOOTER */
+
+footer{
+  border-top:1px solid var(--grid);
+
+  padding:34px 0;
+
+  color:var(--ink-dim);
+
+  font-size:.85rem;
+}
+
+footer .foot-grid{
+  display:flex;
+
+  justify-content:space-between;
+
+  flex-wrap:wrap;
+
+  gap:16px;
+}
+
+footer a{
+  color:var(--ink-dim);
+}
+
+footer a:hover{
+  color:var(--mint);
+}
+
+.disclaimer{
+  margin-top:18px;
+
+  padding-top:18px;
+
+  border-top:1px solid var(--grid);
+
+  font-size:.78rem;
+
+  opacity:.85;
+}
+
+.status-box{
+  margin-top:14px;
+
+  padding:12px;
+
+  border-radius:8px;
+
+  background:var(--bp);
+
+  border:1px solid var(--grid);
+
+  color:var(--ink-dim);
+
+  font-size:.82rem;
+
+  display:none;
+}
+
+.status-box.show{
+  display:block;
+}
+
+@media(max-width:600px){
+
+  .qr-holder{
+    min-width:0;
+    width:100%;
+  }
+
+  .field-row{
+    flex-direction:column;
+  }
+
+  .copy-btn{
+    padding:10px;
+  }
+}
 </style>
 </head>
+
 <body>
 
 <header class="site">
-  <nav class="nav">
-    <a href="#top" class="brand">
-      <svg class="mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <rect x="2" y="2" width="60" height="60" rx="13" fill="#0E2A4A"/>
-        <rect x="12" y="12" width="16" height="16" fill="#F5F7FA"/><rect x="17" y="17" width="6" height="6" fill="#0E2A4A"/>
-        <rect x="36" y="12" width="16" height="16" fill="#F5F7FA"/><rect x="41" y="17" width="6" height="6" fill="#0E2A4A"/>
-        <rect x="12" y="36" width="16" height="16" fill="#F5F7FA"/><rect x="17" y="41" width="6" height="6" fill="#0E2A4A"/>
-        <rect x="10" y="30" width="44" height="4" fill="#FF5A5F"/>
-      </svg>
-      PDF → QR
-    </a>
-    <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">☰</button>
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#generator">Generator</a></li>
-      <li><a href="#how">How It Works</a></li>
-      <li><a href="#host">Host on GitHub</a></li>
-      <li><a href="#faq">FAQ</a></li>
-    </ul>
-  </nav>
+
+<nav class="nav">
+
+<a href="#top" class="brand">
+
+<svg class="mark"
+     viewBox="0 0 64 64"
+     xmlns="http://www.w3.org/2000/svg"
+     aria-hidden="true">
+
+<rect x="2" y="2"
+      width="60"
+      height="60"
+      rx="13"
+      fill="#0E2A4A"/>
+
+<rect x="12" y="12"
+      width="16"
+      height="16"
+      fill="#F5F7FA"/>
+
+<rect x="17" y="17"
+      width="6"
+      height="6"
+      fill="#0E2A4A"/>
+
+<rect x="36" y="12"
+      width="16"
+      height="16"
+      fill="#F5F7FA"/>
+
+<rect x="41" y="17"
+      width="6"
+      height="6"
+      fill="#0E2A4A"/>
+
+<rect x="12" y="36"
+      width="16"
+      height="16"
+      fill="#F5F7FA"/>
+
+<rect x="17" y="41"
+      width="6"
+      height="6"
+      fill="#0E2A4A"/>
+
+<rect x="10"
+      y="30"
+      width="44"
+      height="4"
+      fill="#FF5A5F"/>
+
+</svg>
+
+PDF → QR
+
+</a>
+
+<button
+  class="nav-toggle"
+  id="navToggle"
+  aria-label="Toggle menu"
+  aria-expanded="false">
+☰
+</button>
+
+<ul class="nav-links" id="navLinks">
+
+<li>
+<a href="#generator">Generator</a>
+</li>
+
+<li>
+<a href="#how">How It Works</a>
+</li>
+
+<li>
+<a href="#host">Storage</a>
+</li>
+
+<li>
+<a href="#faq">FAQ</a>
+</li>
+
+</ul>
+
+</nav>
+
 </header>
 
+
 <main id="top">
-  <section class="hero" style="border-top:none;">
-    <div class="wrap hero-grid">
-      <div>
-        <h1>Turn any PDF into a QR code you can scan open</h1>
-        <p class="lede">Pick a PDF, get a QR code that opens exactly that file — nothing else. Runs entirely in your browser: your PDF never leaves your device.</p>
-        <div class="hero-cta">
-          <a href="#generator" class="btn btn-primary">Generate a QR code</a>
-          <a href="#host" class="btn btn-ghost">Host it on GitHub Pages</a>
-        </div>
-      </div>
-      <svg class="hero-svg" width="300" height="260" viewBox="0 0 300 260" aria-hidden="true">
-        <rect x="30" y="20" width="110" height="150" rx="6" fill="none" stroke="#3ED6B5" stroke-width="3"/>
-        <line x1="48" y1="50" x2="122" y2="50" stroke="#AEC4D8" stroke-width="3"/>
-        <line x1="48" y1="68" x2="122" y2="68" stroke="#AEC4D8" stroke-width="3"/>
-        <line x1="48" y1="86" x2="100" y2="86" stroke="#AEC4D8" stroke-width="3"/>
-        <text x="60" y="150" font-family="IBM Plex Mono, monospace" font-size="14" fill="#FFB020">.pdf</text>
-        <path d="M145 95 h30" stroke="#AEC4D8" stroke-width="3" stroke-dasharray="6 6"/>
-        <path d="M165 88 l10 7 l-10 7 z" fill="#AEC4D8"/>
-        <g>
-          <rect x="185" y="35" width="90" height="90" rx="6" fill="#F5F7FA"/>
-          <rect x="193" y="43" width="24" height="24" fill="#0E2A4A"/><rect x="199" y="49" width="12" height="12" fill="#F5F7FA"/>
-          <rect x="243" y="43" width="24" height="24" fill="#0E2A4A"/><rect x="249" y="49" width="12" height="12" fill="#F5F7FA"/>
-          <rect x="193" y="93" width="24" height="24" fill="#0E2A4A"/><rect x="199" y="99" width="12" height="12" fill="#F5F7FA"/>
-          <rect x="228" y="78" width="8" height="8" fill="#0E2A4A"/>
-          <rect x="244" y="78" width="8" height="8" fill="#0E2A4A"/>
-          <rect x="236" y="90" width="8" height="8" fill="#0E2A4A"/>
-          <rect x="252" y="98" width="12" height="8" fill="#0E2A4A"/>
-          <rect x="236" y="106" width="8" height="12" fill="#0E2A4A"/>
-        </g>
-        <rect class="scanline" x="185" y="78" width="90" height="4" fill="#FF5A5F"/>
-      </svg>
-    </div>
-  </section>
 
-  <section id="intro" style="padding-top:0;">
-    <div class="wrap prose" style="max-width:760px;">
-      <p>Printing a QR code on a flyer, business card, or event program only works if the code actually leads somewhere reliable. The usual approach — pasting a PDF into some random online converter — means trusting a stranger's server with your document and hoping the link doesn't rot in six months.</p>
-      <p>This tool takes a different approach: it builds the QR code <strong>entirely in your browser</strong>, and it's honest about the one real constraint in this whole process — <strong>a QR code can only hold about 2–3 KB of data</strong>. That's plenty for a link, but nowhere near enough for a typical multi-page PDF. So for any normal-sized file, the QR code encodes a direct link to your PDF once it's hosted somewhere public, like a GitHub Pages repository you already control. Scan the code, the browser opens that exact link, and your PDF loads. For the rare genuinely tiny PDF — a single-page voucher or a short note — the tool can embed the file's data directly into the QR code instead, so no hosting is needed at all.</p>
-      <p>Because you're hosting the file yourself, you keep control of it permanently: update the PDF whenever you want without reprinting a single QR code, since the link stays the same even if the content behind it changes.</p>
-    </div>
-  </section>
+<section class="hero" style="border-top:none;">
 
-  <section id="generator">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Generate your QR code</h2>
-        <p>Everything below runs locally on your device. Your PDF is never uploaded to any server by this tool.</p>
-      </div>
+<div class="wrap hero-grid">
 
-      <div class="gen-grid">
-        <div class="card">
-          <h3><span class="step-num">1</span> Choose your PDF</h3>
-          <div class="dropzone" id="dropzone" tabindex="0" role="button" aria-label="Choose a PDF file">
-            <svg class="icon" width="36" height="36" viewBox="0 0 36 36" fill="none" style="margin:0 auto;">
-              <path d="M18 6v18M18 24l-7-7M18 24l7-7" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M6 28v3a2 2 0 002 2h20a2 2 0 002-2v-3" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-            <p><strong style="color:var(--ink)">Click to choose a PDF</strong> or drag one here</p>
-            <input type="file" id="fileInput" accept="application/pdf,.pdf">
-          </div>
+<div>
 
-          <div class="file-info" id="fileInfo">
-            <div class="file-row">
-              <span class="name" id="fileName">—</span>
-              <span class="badge" id="fileSizeBadge">—</span>
-            </div>
-            <div class="file-row">
-              <span>PDF signature check</span>
-              <span class="badge" id="fileValidBadge">—</span>
-            </div>
-          </div>
+<h1>
+Turn any PDF into a QR code you can scan
+</h1>
 
-          <div class="field">
-            <label for="slugInput">Filename</label>
-            <div class="field-row">
-              <input type="text" id="slugInput" class="mono" readonly value="">
-              <button class="copy-btn" id="copySlug" type="button">Copy</button>
-            </div>
-          </div>
+<p class="lede">
+Upload your PDF, store it in your GitHub Pages PDF repository,
+and instantly create a QR code that opens the exact PDF.
+</p>
 
-          <h3 style="margin-top:22px;"><span class="step-num">2</span> Upload & generate</h3>
-          <p class="mode-note">Click the button below. Your PDF will be uploaded automatically to your PDF storage repository, then the returned public URL will be encoded into the QR code.</p>
+<div class="hero-cta">
 
-          <div class="field" id="urlField">
-            <label for="urlInput">Public PDF URL</label>
-            <div class="field-row">
-              <input type="text" id="urlInput" class="mono" readonly value="" placeholder="Your PDF URL will appear here">
-              <button class="copy-btn" id="copyUrl" type="button">Copy</button>
-            </div>
-          </div>
+<a href="#generator"
+   class="btn btn-primary">
+Generate a QR code
+</a>
 
-          <button class="btn btn-primary generate-btn" id="generateBtn" type="button">Upload PDF & Generate QR</button>
-          <div class="error-msg" id="errorMsg"></div>
-        </div>
+<a href="#host"
+   class="btn btn-ghost">
+How storage works
+</a>
 
-        <div class="card output-card">
-          <h3 style="justify-content:center;">Your QR code</h3>
-          <div class="qr-holder" id="qrHolder">
-            <div class="qr-placeholder">Choose a PDF and generate to see it here.</div>
-          </div>
-          <div class="output-actions">
-            <button class="btn btn-ghost" id="downloadBtn" type="button" disabled>Download PNG</button>
-            <a class="btn btn-ghost" id="testLink" href="#" target="_blank" rel="noopener" style="pointer-events:none; opacity:0.45;">Open link</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+</div>
 
-  <section id="how">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>How it works</h2>
-      </div>
-      <div class="steps">
-        <div class="step">
-          <div class="num">1</div>
-          <h3>Pick your PDF</h3>
-          <p>The tool reads it locally to check its size and confirm it's really a PDF — nothing leaves your browser at this step.</p>
-        </div>
-        <div class="step">
-          <div class="num">2</div>
-          <h3>Tell it where the PDF will live</h3>
-          <p>Type in the public URL you'll host it at, or let tiny files skip hosting entirely with the embed option.</p>
-        </div>
-        <div class="step">
-          <div class="num">3</div>
-          <h3>Generate, download, scan</h3>
-          <p>Download the QR as a PNG, print it or drop it in a document, and scan it yourself once to confirm it opens correctly.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+</div>
 
-  <section id="host">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Hosting your PDF on GitHub Pages</h2>
-        <p>If your site is already live on GitHub Pages, this is the fastest place to put the PDF so the QR code has something real to point to.</p>
-      </div>
-      <ol class="stepper-list">
-        <li>
-          <h3>Create a <code>files</code> folder</h3>
-          <p>In your repository's root directory, add a new folder named <code>files</code>.</p>
-        </li>
-        <li>
-          <h3>Add your PDF using the suggested filename</h3>
-          <p>Upload your PDF into that folder, named exactly as shown in the generator above — lowercase, hyphenated, no spaces.</p>
-        </li>
-        <li>
-          <h3>Commit the change</h3>
-          <p>Commit straight to your main branch, or merge it in if you're working from a pull request.</p>
-        </li>
-        <li>
-          <h3>Wait for the rebuild</h3>
-          <p>GitHub Pages redeploys automatically after each commit. This usually takes about a minute, occasionally longer.</p>
-        </li>
-        <li>
-          <h3>Generate the QR code and test it</h3>
-          <p>Enter the full URL — something like <code>https://yourname.github.io/yourrepo/files/your-file.pdf</code> — into the generator, then scan the result yourself before printing or sharing it anywhere.</p>
-        </li>
-      </ol>
-    </div>
-  </section>
 
-  <section id="usecases">
-    <div class="wrap">
-      <div class="section-head">
-        <h2>Where a PDF QR code is actually useful</h2>
-      </div>
-      <div class="usecases">
-        <div class="usecase"><h3>Restaurant menus</h3><p>Print one code on the table instead of laminating pages every time prices change.</p></div>
-        <div class="usecase"><h3>Resumes on business cards</h3><p>Hand someone a card the size of your thumb that opens your full multi-page CV.</p></div>
-        <div class="usecase"><h3>Event programs</h3><p>Link a schedule or floor plan that you can still edit after the flyers are already printed.</p></div>
-        <div class="usecase"><h3>Product manuals</h3><p>Put a code on the packaging instead of shipping a paper booklet nobody keeps.</p></div>
-        <div class="usecase"><h3>Real estate flyers</h3><p>Send buyers straight to a full listing brochure from a yard sign.</p></div>
-        <div class="usecase"><h3>Class handouts</h3><p>Share worksheets or slides without printing a stack for every student.</p></div>
-      </div>
-    </div>
-  </section>
+<svg
+  class="hero-svg"
+  width="300"
+  height="260"
+  viewBox="0 0 300 260"
+  aria-hidden="true">
 
-  <section id="faq">
-    <div class="wrap">
-      <div class="section-head"><h2>Frequently asked questions</h2></div>
-      <div id="faqList">
-        <div class="faq-item open">
-          <div class="faq-q">Can a QR code actually contain an entire PDF file?<span class="chev">+</span></div>
-          <div class="faq-a">Only if the PDF is very small, roughly under 1.5 KB. QR codes top out around 2–3 KB of raw data, and most real PDFs are far larger. For anything bigger, the QR code holds a link to the PDF instead of the file itself, which is what this tool does by default.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Does this tool upload my PDF?<span class="chev">+</span></div>
-          <div class="faq-a">Yes. When you click “Upload PDF & Generate QR”, the PDF is sent to your Render backend, which stores it in your PDF repository.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Why does my QR code lead to a broken link?<span class="chev">+</span></div>
-          <div class="faq-a">The usual causes are an incorrect Render upload URL, a backend configuration problem, a backend/GitHub permission issue, or a public PDF URL that is not configured correctly.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">What filename should I give my PDF?<span class="chev">+</span></div>
-          <div class="faq-a">The backend creates a unique filename automatically based on the selected PDF name.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Can I use a custom domain instead of github.io?<span class="chev">+</span></div>
-          <div class="faq-a">Yes. Just replace the URL in the generator's link field with wherever the PDF will actually be hosted — a github.io address, a custom domain pointed at GitHub Pages, or any other file host.</div>
-        </div>
-        <div class="faq-item">
-          <div class="faq-q">Will the QR code work before I upload the PDF?<span class="chev">+</span></div>
-          <div class="faq-a">Not if you're using the link method. The QR code encodes a URL, and that URL will 404 until the PDF actually exists at that exact path in your live repository.</div>
-        </div>
-      </div>
-    </div>
-  </section>
+<rect
+  x="30"
+  y="20"
+  width="110"
+  height="150"
+  rx="6"
+  fill="none"
+  stroke="#3ED6B5"
+  stroke-width="3"/>
+
+<line
+  x1="48"
+  y1="50"
+  x2="122"
+  y2="50"
+  stroke="#AEC4D8"
+  stroke-width="3"/>
+
+<line
+  x1="48"
+  y1="68"
+  x2="122"
+  y2="68"
+  stroke="#AEC4D8"
+  stroke-width="3"/>
+
+<line
+  x1="48"
+  y1="86"
+  x2="100"
+  y2="86"
+  stroke="#AEC4D8"
+  stroke-width="3"/>
+
+<text
+  x="60"
+  y="150"
+  font-family="IBM Plex Mono, monospace"
+  font-size="14"
+  fill="#FFB020">
+.pdf
+</text>
+
+<path
+  d="M145 95 h30"
+  stroke="#AEC4D8"
+  stroke-width="3"
+  stroke-dasharray="6 6"/>
+
+<path
+  d="M165 88 l10 7 l-10 7 z"
+  fill="#AEC4D8"/>
+
+<g>
+
+<rect
+  x="185"
+  y="35"
+  width="90"
+  height="90"
+  rx="6"
+  fill="#F5F7FA"/>
+
+<rect
+  x="193"
+  y="43"
+  width="24"
+  height="24"
+  fill="#0E2A4A"/>
+
+<rect
+  x="199"
+  y="49"
+  width="12"
+  height="12"
+  fill="#F5F7FA"/>
+
+<rect
+  x="243"
+  y="43"
+  width="24"
+  height="24"
+  fill="#0E2A4A"/>
+
+<rect
+  x="249"
+  y="49"
+  width="12"
+  height="12"
+  fill="#F5F7FA"/>
+
+<rect
+  x="193"
+  y="93"
+  width="24"
+  height="24"
+  fill="#0E2A4A"/>
+
+<rect
+  x="199"
+  y="99"
+  width="12"
+  height="12"
+  fill="#F5F7FA"/>
+
+<rect
+  x="228"
+  y="78"
+  width="8"
+  height="8"
+  fill="#0E2A4A"/>
+
+<rect
+  x="244"
+  y="78"
+  width="8"
+  height="8"
+  fill="#0E2A4A"/>
+
+<rect
+  x="236"
+  y="90"
+  width="8"
+  height="8"
+  fill="#0E2A4A"/>
+
+<rect
+  x="252"
+  y="98"
+  width="12"
+  height="8"
+  fill="#0E2A4A"/>
+
+<rect
+  x="236"
+  y="106"
+  width="8"
+  height="12"
+  fill="#0E2A4A"/>
+
+</g>
+
+<rect
+  x="185"
+  y="78"
+  width="90"
+  height="4"
+  fill="#FF5A5F"/>
+
+</svg>
+
+</div>
+
+</section>
+
+
+<section id="intro" style="padding-top:0;">
+
+<div
+  class="wrap prose"
+  style="max-width:760px;">
+
+<p>
+A QR code cannot normally contain a full PDF because QR codes have
+limited data capacity. Instead, this tool creates a QR code containing
+a public URL that points directly to your PDF.
+</p>
+
+<p>
+When you click
+<strong>Upload PDF & Generate QR</strong>,
+your browser sends the PDF to the Render backend.
+The backend uploads the PDF into the
+<strong>GitHub PDF storage repository</strong>,
+then returns the public GitHub Pages URL.
+</p>
+
+<p>
+The QR code is generated from that real public URL.
+When someone scans it, their browser opens the PDF directly.
+</p>
+
+</div>
+
+</section>
+
+
+<section id="generator">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<h2>
+Generate your QR code
+</h2>
+
+<p>
+Choose a PDF up to 10 MB. The PDF is uploaded only after you
+click the upload button.
+</p>
+
+</div>
+
+
+<div class="gen-grid">
+
+
+<div class="card">
+
+<h3>
+<span class="step-num">1</span>
+Choose your PDF
+</h3>
+
+
+<div
+  class="dropzone"
+  id="dropzone"
+  tabindex="0"
+  role="button"
+  aria-label="Choose a PDF file">
+
+<svg
+  class="icon"
+  width="36"
+  height="36"
+  viewBox="0 0 36 36"
+  fill="none"
+  style="margin:0 auto;">
+
+<path
+  d="M18 6v18M18 24l-7-7M18 24l7-7"
+  stroke="currentColor"
+  stroke-width="2.5"
+  stroke-linecap="round"
+  stroke-linejoin="round"/>
+
+<path
+  d="M6 28v3a2 2 0 002 2h20a2 2 0 002-2v-3"
+  stroke="currentColor"
+  stroke-width="2.5"
+  stroke-linecap="round"/>
+
+</svg>
+
+<p>
+<strong style="color:var(--ink)">
+Click to choose a PDF
+</strong>
+or drag one here
+</p>
+
+<input
+  type="file"
+  id="fileInput"
+  accept="application/pdf,.pdf">
+
+</div>
+
+
+<div
+  class="file-info"
+  id="fileInfo">
+
+<div class="file-row">
+
+<span
+  class="name"
+  id="fileName">
+—
+</span>
+
+<span
+  class="badge"
+  id="fileSizeBadge">
+—
+</span>
+
+</div>
+
+
+<div class="file-row">
+
+<span>
+PDF signature check
+</span>
+
+<span
+  class="badge"
+  id="fileValidBadge">
+—
+</span>
+
+</div>
+
+</div>
+
+
+<div class="field">
+
+<label for="slugInput">
+Generated filename
+</label>
+
+<div class="field-row">
+
+<input
+  type="text"
+  id="slugInput"
+  class="mono"
+  readonly
+  value="">
+
+<button
+  class="copy-btn"
+  id="copySlug"
+  type="button">
+Copy
+</button>
+
+</div>
+
+</div>
+
+
+<h3 style="margin-top:22px;">
+
+<span class="step-num">
+2
+</span>
+
+Upload & generate
+
+</h3>
+
+
+<p class="mode-note">
+
+Your PDF will be uploaded to the Render backend.
+Render then stores it in the GitHub repository:
+
+<br>
+
+<code>
+bazpurss223/pdf-storage/files/
+</code>
+
+<br>
+
+After GitHub receives the file, the backend returns
+the public GitHub Pages URL.
+
+</p>
+
+
+<div class="field">
+
+<label for="urlInput">
+Public PDF URL
+</label>
+
+<div class="field-row">
+
+<input
+  type="text"
+  id="urlInput"
+  class="mono"
+  readonly
+  value=""
+  placeholder="Your PDF URL will appear here">
+
+<button
+  class="copy-btn"
+  id="copyUrl"
+  type="button">
+Copy
+</button>
+
+</div>
+
+</div>
+
+
+<button
+  class="btn btn-primary generate-btn"
+  id="generateBtn"
+  type="button">
+
+Upload PDF & Generate QR
+
+</button>
+
+
+<div
+  class="status-box"
+  id="statusBox">
+</div>
+
+
+<div
+  class="success-msg"
+  id="successMsg">
+PDF uploaded successfully and QR code generated.
+</div>
+
+
+<div
+  class="error-msg"
+  id="errorMsg">
+</div>
+
+</div>
+
+
+<div class="card output-card">
+
+<h3 style="justify-content:center;">
+Your QR code
+</h3>
+
+
+<div
+  class="qr-holder"
+  id="qrHolder">
+
+<div class="qr-placeholder">
+Choose a PDF and upload it to generate the QR code.
+</div>
+
+</div>
+
+
+<div class="output-actions">
+
+<button
+  class="btn btn-ghost"
+  id="downloadBtn"
+  type="button"
+  disabled>
+
+Download PNG
+
+</button>
+
+
+<a
+  class="btn btn-ghost"
+  id="testLink"
+  href="#"
+  target="_blank"
+  rel="noopener"
+  style="pointer-events:none;opacity:.45;">
+
+Open PDF
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="how">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<h2>
+How it works
+</h2>
+
+</div>
+
+
+<div class="steps">
+
+
+<div class="step">
+
+<div class="num">
+1
+</div>
+
+<h3>
+Choose your PDF
+</h3>
+
+<p>
+Select a PDF from your computer. The browser checks the file
+type and size before uploading.
+</p>
+
+</div>
+
+
+<div class="step">
+
+<div class="num">
+2
+</div>
+
+<h3>
+Upload to GitHub storage
+</h3>
+
+<p>
+Render receives the PDF and securely uploads it to the
+configured GitHub repository using the GitHub API.
+</p>
+
+</div>
+
+
+<div class="step">
+
+<div class="num">
+3
+</div>
+
+<h3>
+Scan the QR code
+</h3>
+
+<p>
+The QR code contains the real GitHub Pages URL of your PDF.
+Scan it from any phone to open the document.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="host">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<h2>
+Where your PDF is stored
+</h2>
+
+<p>
+Your uploaded PDFs are stored in your GitHub repository and served
+publicly through GitHub Pages.
+</p>
+
+</div>
+
+
+<ol class="stepper-list">
+
+
+<li>
+
+<h3>
+GitHub repository
+</h3>
+
+<p>
+The backend uploads files to:
+<br>
+
+<code>
+bazpurss223/pdf-storage
+</code>
+
+</p>
+
+</li>
+
+
+<li>
+
+<h3>
+PDF folder
+</h3>
+
+<p>
+Each uploaded PDF is placed inside:
+<br>
+
+<code>
+files/
+</code>
+
+</p>
+
+</li>
+
+
+<li>
+
+<h3>
+Unique filename
+</h3>
+
+<p>
+The backend adds a random prefix to prevent filename collisions.
+For example:
+<br>
+
+<code>
+973cf255ed2c825b-Motorcycle-Bikers-png-svg.pdf
+</code>
+
+</p>
+
+</li>
+
+
+<li>
+
+<h3>
+Public URL
+</h3>
+
+<p>
+The backend returns a URL like:
+<br>
+
+<code>
+https://bazpurss223.github.io/pdf-storage/files/filename.pdf
+</code>
+
+</p>
+
+</li>
+
+
+<li>
+
+<h3>
+QR code
+</h3>
+
+<p>
+The QR code contains that exact public URL. Scanning it opens
+the PDF hosted by GitHub Pages.
+</p>
+
+</li>
+
+</ol>
+
+</div>
+
+</section>
+
+
+<section id="usecases">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<h2>
+Where PDF QR codes are useful
+</h2>
+
+</div>
+
+
+<div class="usecases">
+
+<div class="usecase">
+<h3>Restaurant menus</h3>
+<p>
+Print one QR code on tables and open the current menu.
+</p>
+</div>
+
+<div class="usecase">
+<h3>Resumes</h3>
+<p>
+Put your full CV behind a QR code on a business card.
+</p>
+</div>
+
+<div class="usecase">
+<h3>Event programs</h3>
+<p>
+Share schedules, maps and event information.
+</p>
+</div>
+
+<div class="usecase">
+<h3>Product manuals</h3>
+<p>
+Put a QR code on packaging that opens the manual.
+</p>
+</div>
+
+<div class="usecase">
+<h3>Real estate</h3>
+<p>
+Link flyers and property brochures directly from signs.
+</p>
+</div>
+
+<div class="usecase">
+<h3>Education</h3>
+<p>
+Share worksheets, handouts and course PDFs.
+</p>
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<section id="faq">
+
+<div class="wrap">
+
+<div class="section-head">
+
+<h2>
+Frequently asked questions
+</h2>
+
+</div>
+
+
+<div id="faqList">
+
+
+<div class="faq-item open">
+
+<div class="faq-q">
+Can a QR code contain an entire PDF?
+<span class="chev">+</span>
+</div>
+
+<div class="faq-a">
+Usually no. QR codes have limited data capacity, so normal PDFs
+are much too large. This tool puts the public PDF URL inside
+the QR code instead.
+</div>
+
+</div>
+
+
+<div class="faq-item">
+
+<div class="faq-q">
+Does this tool upload my PDF?
+<span class="chev">+</span>
+</div>
+
+<div class="faq-a">
+Yes. When you click "Upload PDF & Generate QR", your PDF is sent
+to the Render backend. Render then uploads the PDF to the configured
+GitHub repository.
+</div>
+
+</div>
+
+
+<div class="faq-item">
+
+<div class="faq-q">
+Where is my PDF stored?
+<span class="chev">+</span>
+</div>
+
+<div class="faq-a">
+The PDF is stored in the GitHub repository
+bazpurss223/pdf-storage inside the files folder.
+GitHub Pages then serves the file publicly.
+</div>
+
+</div>
+
+
+<div class="faq-item">
+
+<div class="faq-q">
+Why could my PDF URL show 404?
+<span class="chev">+</span>
+</div>
+
+<div class="faq-a">
+A 404 normally means the PDF was not successfully committed to
+the GitHub repository, GitHub Pages is not configured correctly,
+or Pages has not finished deploying the latest commit.
+</div>
+
+</div>
+
+
+<div class="faq-item">
+
+<div class="faq-q">
+Why does the backend need a GitHub token?
+<span class="chev">+</span>
+</div>
+
+<div class="faq-a">
+The Render backend uses the GitHub API to create the PDF file
+inside your repository. The token must stay on Render and must
+never be placed in this website's JavaScript.
+</div>
+
+</div>
+
+
+<div class="faq-item">
+
+<div class="faq-q">
+Will scanning the QR open the PDF?
+<span class="chev">+</span>
+</div>
+
+<div class="faq-a">
+Yes, once GitHub Pages has deployed the uploaded file, the QR
+code points directly to that PDF URL.
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
 </main>
 
+
 <footer>
-  <div class="wrap">
-    <div class="foot-grid">
-      <div>PDF to QR Code Generator — a free, browser-only tool.</div>
-      <div><a href="#generator">Generator</a> · <a href="#host">Host on GitHub</a> · <a href="#faq">FAQ</a></div>
-    </div>
-    <div class="disclaimer">
-      This tool runs entirely client-side: your PDF is processed in your own browser and is never transmitted to any server operated by this site. If you choose to host your PDF publicly (for example on GitHub Pages), that file becomes accessible to anyone with the link, the same as any other public web page.
-    </div>
-  </div>
+
+<div class="wrap">
+
+<div class="foot-grid">
+
+<div>
+PDF to QR Code Generator
+</div>
+
+<div>
+<a href="#generator">Generator</a>
+·
+<a href="#host">Storage</a>
+·
+<a href="#faq">FAQ</a>
+</div>
+
+</div>
+
+
+<div class="disclaimer">
+
+When you click "Upload PDF & Generate QR", your PDF is transmitted
+to the Render backend and then uploaded to the configured GitHub
+repository. Uploaded files are publicly accessible through GitHub
+Pages. Do not upload confidential or private documents.
+
+</div>
+
+</div>
+
 </footer>
 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
 <script>
+
 /*
- * PDF upload configuration
- * Replace the URL below with your Render service URL + /upload.
- * Example:
- * https://pdf-storage-backend.onrender.com/upload
- */
-const UPLOAD_API = 'https://pdf-storage-1-re7m.onrender.com/upload';
-  
+========================================================
+PDF TO QR CONFIGURATION
+========================================================
+*/
+
+const UPLOAD_API =
+  'https://pdf-storage-1-re7m.onrender.com/upload';
+
+const MAX_FILE_SIZE =
+  10 * 1024 * 1024;
+
+
+/*
+========================================================
+ELEMENTS
+========================================================
+*/
+
 let currentFile = null;
 let currentSlug = '';
 
-const dropzone = document.getElementById('dropzone');
-const fileInput = document.getElementById('fileInput');
-const fileInfo = document.getElementById('fileInfo');
-const fileName = document.getElementById('fileName');
-const fileSizeBadge = document.getElementById('fileSizeBadge');
-const fileValidBadge = document.getElementById('fileValidBadge');
-const slugInput = document.getElementById('slugInput');
-const urlInput = document.getElementById('urlInput');
-const generateBtn = document.getElementById('generateBtn');
-const errorMsg = document.getElementById('errorMsg');
-const qrHolder = document.getElementById('qrHolder');
-const downloadBtn = document.getElementById('downloadBtn');
-const testLink = document.getElementById('testLink');
+const dropzone =
+  document.getElementById('dropzone');
+
+const fileInput =
+  document.getElementById('fileInput');
+
+const fileInfo =
+  document.getElementById('fileInfo');
+
+const fileName =
+  document.getElementById('fileName');
+
+const fileSizeBadge =
+  document.getElementById('fileSizeBadge');
+
+const fileValidBadge =
+  document.getElementById('fileValidBadge');
+
+const slugInput =
+  document.getElementById('slugInput');
+
+const urlInput =
+  document.getElementById('urlInput');
+
+const generateBtn =
+  document.getElementById('generateBtn');
+
+const errorMsg =
+  document.getElementById('errorMsg');
+
+const successMsg =
+  document.getElementById('successMsg');
+
+const statusBox =
+  document.getElementById('statusBox');
+
+const qrHolder =
+  document.getElementById('qrHolder');
+
+const downloadBtn =
+  document.getElementById('downloadBtn');
+
+const testLink =
+  document.getElementById('testLink');
+
+
+/*
+========================================================
+HELPERS
+========================================================
+*/
 
 function humanSize(bytes){
-  if(bytes < 1024) return bytes + ' B';
-  if(bytes < 1024*1024) return (bytes/1024).toFixed(1) + ' KB';
-  return (bytes/(1024*1024)).toFixed(2) + ' MB';
+
+  if(bytes < 1024){
+    return bytes + ' B';
+  }
+
+  if(bytes < 1024 * 1024){
+    return (bytes / 1024).toFixed(1) + ' KB';
+  }
+
+  return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+
 }
+
 
 function slugify(name){
-  const base = name.replace(/\.pdf$/i, '');
-  let slug = base.toLowerCase().trim()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  if(!slug) slug = 'document';
+
+  const base =
+    name.replace(/\.pdf$/i,'');
+
+  let slug =
+    base
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g,'-')
+      .replace(/^-+|-+$/g,'');
+
+  if(!slug){
+    slug = 'document';
+  }
+
   return slug + '.pdf';
+
 }
+
 
 function clearOutput(){
-  qrHolder.innerHTML = '<div class="qr-placeholder">Choose a PDF, then upload it to generate the QR code.</div>';
+
+  qrHolder.innerHTML =
+    '<div class="qr-placeholder">Choose a PDF and upload it to generate the QR code.</div>';
+
   downloadBtn.disabled = true;
-  testLink.style.pointerEvents = 'none';
-  testLink.style.opacity = '0.45';
-  testLink.href = '#';
-  urlInput.value = '';
+
+  testLink.style.pointerEvents =
+    'none';
+
+  testLink.style.opacity =
+    '.45';
+
+  testLink.href =
+    '#';
+
+  urlInput.value =
+    '';
+
   errorMsg.classList.remove('show');
+
+  successMsg.classList.remove('show');
+
+  statusBox.classList.remove('show');
+
+  statusBox.textContent =
+    '';
+
 }
 
-function showError(msg){
-  errorMsg.textContent = msg;
+
+function showError(message){
+
+  successMsg.classList.remove('show');
+
+  statusBox.classList.remove('show');
+
+  errorMsg.textContent =
+    message;
+
   errorMsg.classList.add('show');
+
 }
+
+
+function showStatus(message){
+
+  statusBox.textContent =
+    message;
+
+  statusBox.classList.add('show');
+
+}
+
+
+function showSuccess(message){
+
+  errorMsg.classList.remove('show');
+
+  statusBox.classList.remove('show');
+
+  successMsg.textContent =
+    message;
+
+  successMsg.classList.add('show');
+
+}
+
+
+/*
+========================================================
+FILE HANDLING
+========================================================
+*/
 
 function handleFile(file){
-  if(!file) return;
 
-  currentFile = file;
-  currentSlug = slugify(file.name);
-
-  fileInfo.classList.add('show');
-  fileName.textContent = file.name;
-  fileSizeBadge.textContent = humanSize(file.size);
-  fileSizeBadge.className = 'badge ' + (file.size <= 10 * 1024 * 1024 ? 'ok' : 'bad');
-  slugInput.value = currentSlug;
-
-  fileValidBadge.textContent = 'Checking…';
-  fileValidBadge.className = 'badge warn';
-
-  const slice = file.slice(0, 5);
-  slice.arrayBuffer().then(buf => {
-    const bytes = new Uint8Array(buf);
-    const header = String.fromCharCode(...bytes);
-
-    if(header === '%PDF-'){
-      fileValidBadge.textContent = 'Looks valid';
-      fileValidBadge.className = 'badge ok';
-    } else {
-      fileValidBadge.textContent = 'Not a PDF';
-      fileValidBadge.className = 'badge bad';
-    }
-  }).catch(() => {
-    fileValidBadge.textContent = 'Could not check';
-    fileValidBadge.className = 'badge warn';
-  });
+  if(!file){
+    return;
+  }
 
   clearOutput();
-}
 
-dropzone.addEventListener('click', () => fileInput.click());
-dropzone.addEventListener('keydown', (e) => {
-  if(e.key === 'Enter' || e.key === ' '){
-    e.preventDefault();
-    fileInput.click();
-  }
-});
-fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
+  currentFile =
+    file;
 
-['dragenter','dragover'].forEach(evt => dropzone.addEventListener(evt, (e) => {
-  e.preventDefault();
-  dropzone.classList.add('drag');
-}));
-['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, (e) => {
-  e.preventDefault();
-  dropzone.classList.remove('drag');
-}));
-dropzone.addEventListener('drop', (e) => {
-  const f = e.dataTransfer.files[0];
-  if(f) handleFile(f);
-});
+  currentSlug =
+    slugify(file.name);
 
-function copyText(text, btn){
-  if(!text) return;
-  const original = btn.textContent;
-  const done = () => {
-    btn.textContent = 'Copied';
-    setTimeout(() => btn.textContent = original, 1200);
-  };
+  fileInfo.classList.add('show');
 
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
-  } else {
-    fallbackCopy(text, done);
-  }
-}
+  fileName.textContent =
+    file.name;
 
-function fallbackCopy(text, done){
-  const ta = document.createElement('textarea');
-  ta.value = text;
-  document.body.appendChild(ta);
-  ta.select();
-  try{
-    document.execCommand('copy');
-    done();
-  }catch(e){}
-  document.body.removeChild(ta);
-}
+  fileSizeBadge.textContent =
+    humanSize(file.size);
 
-document.getElementById('copySlug').addEventListener('click', () =>
-  copyText(slugInput.value, document.getElementById('copySlug'))
-);
+  fileSizeBadge.className =
+    'badge ' +
+    (
+      file.size <= MAX_FILE_SIZE
+        ? 'ok'
+        : 'bad'
+    );
 
-document.getElementById('copyUrl').addEventListener('click', () =>
-  copyText(urlInput.value, document.getElementById('copyUrl'))
-);
+  slugInput.value =
+    currentSlug;
 
-generateBtn.addEventListener('click', async () => {
-  errorMsg.classList.remove('show');
+  fileValidBadge.textContent =
+    'Checking…';
 
-  if(!currentFile){
-    showError('Choose a PDF file first.');
-    return;
+  fileValidBadge.className =
+    'badge warn';
+
+
+  if(file.size > MAX_FILE_SIZE){
+
+    fileValidBadge.textContent =
+      'Too large';
+
+    fileValidBadge.className =
+      'badge bad';
+
   }
 
-  if(UPLOAD_API.includes('PASTE_YOUR_RENDER_URL_HERE')){
-    showError('Set your Render upload URL in the UPLOAD_API constant first.');
-    return;
-  }
 
-  if(currentFile.size > 10 * 1024 * 1024){
-    showError('PDF is too large. Maximum size is 10 MB.');
-    return;
-  }
+  const slice =
+    file.slice(0,5);
 
-  if(typeof QRious === 'undefined'){
-    showError('The QR library failed to load. Check your internet connection and refresh the page.');
-    return;
-  }
 
-  generateBtn.disabled = true;
-  generateBtn.textContent = 'Uploading PDF…';
+  slice.arrayBuffer()
 
-  try{
-    const formData = new FormData();
-    formData.append('pdf', currentFile);
+    .then(buffer => {
 
-    const response = await fetch(UPLOAD_API, {
-      method: 'POST',
-      body: formData
+      const bytes =
+        new Uint8Array(buffer);
+
+      const header =
+        String.fromCharCode(...bytes);
+
+
+      if(header === '%PDF-'){
+
+        fileValidBadge.textContent =
+          'Looks valid';
+
+        fileValidBadge.className =
+          'badge ok';
+
+      }else{
+
+        fileValidBadge.textContent =
+          'Not a PDF';
+
+        fileValidBadge.className =
+          'badge bad';
+
+      }
+
+    })
+
+    .catch(() => {
+
+      fileValidBadge.textContent =
+        'Could not check';
+
+      fileValidBadge.className =
+        'badge warn';
+
     });
 
-    let data;
-    try {
-      data = await response.json();
-    } catch(e) {
-      throw new Error('The server returned an invalid response.');
+}
+
+
+/*
+========================================================
+DROPZONE
+========================================================
+*/
+
+dropzone.addEventListener(
+  'click',
+  () => fileInput.click()
+);
+
+
+dropzone.addEventListener(
+  'keydown',
+  event => {
+
+    if(
+      event.key === 'Enter' ||
+      event.key === ' '
+    ){
+
+      event.preventDefault();
+
+      fileInput.click();
+
     }
 
-    if(!response.ok || !data.success || !data.pdfUrl){
-      throw new Error(data.error || 'PDF upload failed.');
+  }
+);
+
+
+fileInput.addEventListener(
+  'change',
+  event => {
+
+    handleFile(
+      event.target.files[0]
+    );
+
+  }
+);
+
+
+['dragenter','dragover']
+.forEach(eventName => {
+
+  dropzone.addEventListener(
+    eventName,
+    event => {
+
+      event.preventDefault();
+
+      dropzone.classList.add('drag');
+
+    }
+  );
+
+});
+
+
+['dragleave','drop']
+.forEach(eventName => {
+
+  dropzone.addEventListener(
+    eventName,
+    event => {
+
+      event.preventDefault();
+
+      dropzone.classList.remove('drag');
+
+    }
+  );
+
+});
+
+
+dropzone.addEventListener(
+  'drop',
+  event => {
+
+    const file =
+      event.dataTransfer.files[0];
+
+    if(file){
+      handleFile(file);
     }
 
-    urlInput.value = data.pdfUrl;
-    renderQr(data.pdfUrl);
+  }
+);
+
+
+/*
+========================================================
+COPY
+========================================================
+*/
+
+function copyText(text,button){
+
+  if(!text){
+    return;
+  }
+
+  const original =
+    button.textContent;
+
+  const done = () => {
+
+    button.textContent =
+      'Copied';
+
+    setTimeout(
+      () => button.textContent = original,
+      1200
+    );
+
+  };
+
+
+  if(
+    navigator.clipboard &&
+    navigator.clipboard.writeText
+  ){
+
+    navigator.clipboard
+      .writeText(text)
+      .then(done)
+      .catch(
+        () => fallbackCopy(text,done)
+      );
+
+  }else{
+
+    fallbackCopy(text,done);
+
+  }
+
+}
+
+
+function fallbackCopy(text,done){
+
+  const textarea =
+    document.createElement('textarea');
+
+  textarea.value =
+    text;
+
+  document.body.appendChild(
+    textarea
+  );
+
+  textarea.select();
+
+  try{
+
+    document.execCommand('copy');
+
+    done();
 
   }catch(error){
-    console.error('Upload error:', error);
-    showError(error.message || 'Could not upload the PDF. Please try again.');
-  }finally{
-    generateBtn.disabled = false;
-    generateBtn.textContent = 'Upload PDF & Generate QR';
-  }
-});
 
-function renderQr(value){
-  qrHolder.innerHTML = '';
-  const canvas = document.createElement('canvas');
-  qrHolder.appendChild(canvas);
-  try{
-    new QRious({
-      element: canvas,
-      value: value,
-      size: 260,
-      level: 'M',
-      background: '#ffffff',
-      foreground: '#0E2A4A'
-    });
-  }catch(e){
-    qrHolder.innerHTML = '<div class="qr-placeholder">Could not generate a QR code from this data.</div>';
-    showError('Could not generate the QR code from the returned PDF URL.');
-    return;
+    console.error(error);
+
   }
-  downloadBtn.disabled = false;
-  downloadBtn.onclick = () => {
-    const a = document.createElement('a');
-    a.href = canvas.toDataURL('image/png');
-    a.download = currentSlug.replace(/\.pdf$/i, '') + '-qr.png';
-    a.click();
-  };
-  testLink.href = value;
-  testLink.style.pointerEvents = 'auto';
-  testLink.style.opacity = '1';
+
+  document.body.removeChild(
+    textarea
+  );
+
 }
 
-document.querySelectorAll('.faq-item').forEach(item => {
-  item.querySelector('.faq-q').addEventListener('click', () => item.classList.toggle('open'));
-});
 
-const navToggle = document.getElementById('navToggle');
-const navLinks = document.getElementById('navLinks');
-navToggle.addEventListener('click', () => {
-  const open = navLinks.classList.toggle('open');
-  navToggle.setAttribute('aria-expanded', open);
-});
-navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
+document
+  .getElementById('copySlug')
+  .addEventListener(
+    'click',
+    () => copyText(
+      slugInput.value,
+      document.getElementById('copySlug')
+    )
+  );
+
+
+document
+  .getElementById('copyUrl')
+  .addEventListener(
+    'click',
+    () => copyText(
+      urlInput.value,
+      document.getElementById('copyUrl')
+    )
+  );
+
+
+/*
+========================================================
+UPLOAD PDF
+========================================================
+*/
+
+generateBtn.addEventListener(
+  'click',
+  async () => {
+
+    errorMsg.classList.remove('show');
+
+    successMsg.classList.remove('show');
+
+    statusBox.classList.remove('show');
+
+
+    if(!currentFile){
+
+      showError(
+        'Choose a PDF file first.'
+      );
+
+      return;
+
+    }
+
+
+    if(currentFile.size > MAX_FILE_SIZE){
+
+      showError(
+        'PDF is too large. Maximum size is 10 MB.'
+      );
+
+      return;
+
+    }
+
+
+    if(typeof QRious === 'undefined'){
+
+      showError(
+        'The QR library failed to load. Please refresh the page.'
+      );
+
+      return;
+
+    }
+
+
+    generateBtn.disabled =
+      true;
+
+    generateBtn.textContent =
+      'Uploading PDF…';
+
+
+    try{
+
+      showStatus(
+        'Sending PDF to the Render backend…'
+      );
+
+
+      const formData =
+        new FormData();
+
+      formData.append(
+        'pdf',
+        currentFile
+      );
+
+
+      const response =
+        await fetch(
+          UPLOAD_API,
+          {
+            method:'POST',
+            body:formData
+          }
+        );
+
+
+      let data;
+
+
+      try{
+
+        data =
+          await response.json();
+
+      }catch(error){
+
+        throw new Error(
+          'The Render server returned an invalid response.'
+        );
+
+      }
+
+
+      if(
+        !response.ok ||
+        !data.success ||
+        !data.pdfUrl
+      ){
+
+        throw new Error(
+          data.error ||
+          'The PDF could not be uploaded.'
+        );
+
+      }
+
+
+      /*
+      The URL below MUST be the actual
+      GitHub Pages PDF URL returned
+      by the backend.
+      */
+
+      const pdfUrl =
+        data.pdfUrl;
+
+
+      urlInput.value =
+        pdfUrl;
+
+
+      showStatus(
+        'PDF uploaded to GitHub. Generating your QR code…'
+      );
+
+
+      renderQr(
+        pdfUrl
+      );
+
+
+      showSuccess(
+        'PDF uploaded successfully. Your QR code is ready.'
+      );
+
+
+    }catch(error){
+
+      console.error(
+        'Upload error:',
+        error
+      );
+
+
+      let message =
+        error.message ||
+        'Could not upload the PDF.';
+
+
+      if(
+        error instanceof TypeError &&
+        error.message === 'Failed to fetch'
+      ){
+
+        message =
+          'Could not connect to the Render backend. Check that the Render service is running and CORS is enabled.';
+
+      }
+
+
+      showError(
+        message
+      );
+
+
+    }finally{
+
+      generateBtn.disabled =
+        false;
+
+      generateBtn.textContent =
+        'Upload PDF & Generate QR';
+
+    }
+
+  }
+);
+
+
+/*
+========================================================
+QR GENERATION
+========================================================
+*/
+
+function renderQr(value){
+
+  qrHolder.innerHTML =
+    '';
+
+  const canvas =
+    document.createElement('canvas');
+
+  qrHolder.appendChild(
+    canvas
+  );
+
+
+  try{
+
+    new QRious({
+
+      element:canvas,
+
+      value:value,
+
+      size:260,
+
+      level:'M',
+
+      background:'#ffffff',
+
+      foreground:'#0E2A4A'
+
+    });
+
+  }catch(error){
+
+    console.error(error);
+
+    qrHolder.innerHTML =
+      '<div class="qr-placeholder">Could not generate the QR code.</div>';
+
+    showError(
+      'Could not generate the QR code from the returned PDF URL.'
+    );
+
+    return;
+
+  }
+
+
+  downloadBtn.disabled =
+    false;
+
+
+  downloadBtn.onclick =
+    () => {
+
+      const link =
+        document.createElement('a');
+
+      link.href =
+        canvas.toDataURL(
+          'image/png'
+        );
+
+      link.download =
+        currentSlug.replace(
+          /\.pdf$/i,
+          ''
+        ) +
+        '-qr.png';
+
+      link.click();
+
+    };
+
+
+  testLink.href =
+    value;
+
+  testLink.style.pointerEvents =
+    'auto';
+
+  testLink.style.opacity =
+    '1';
+
+}
+
+
+/*
+========================================================
+FAQ
+========================================================
+*/
+
+document
+  .querySelectorAll('.faq-item')
+  .forEach(item => {
+
+    item
+      .querySelector('.faq-q')
+      .addEventListener(
+        'click',
+        () => {
+
+          item.classList.toggle(
+            'open'
+          );
+
+        }
+      );
+
+  });
+
+
+/*
+========================================================
+MOBILE MENU
+========================================================
+*/
+
+const navToggle =
+  document.getElementById(
+    'navToggle'
+  );
+
+const navLinks =
+  document.getElementById(
+    'navLinks'
+  );
+
+
+navToggle.addEventListener(
+  'click',
+  () => {
+
+    const open =
+      navLinks.classList.toggle(
+        'open'
+      );
+
+    navToggle.setAttribute(
+      'aria-expanded',
+      open
+    );
+
+  }
+);
+
+
+navLinks
+  .querySelectorAll('a')
+  .forEach(link => {
+
+    link.addEventListener(
+      'click',
+      () => navLinks.classList.remove('open')
+    );
+
+  });
+
 </script>
+
 </body>
 </html>
