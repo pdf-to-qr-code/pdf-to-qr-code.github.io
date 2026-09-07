@@ -598,6 +598,29 @@ section{
   flex-wrap:wrap;
 }
 
+.loading-state{
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  text-align:center;
+  min-height:292px;
+  width:100%;
+}
+.loading-state.show{display:flex;}
+.loader{
+  width:48px;height:48px;
+  border:4px solid rgba(62,214,181,.18);
+  border-top-color:var(--mint);
+  border-right-color:var(--mint);
+  border-radius:50%;
+  animation:spin .8s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-title{color:var(--ink);font-weight:600;}
+.loading-text{color:var(--ink-dim);font-size:.88rem;max-width:34ch;}
+
 .error-msg{
   color:var(--laser);
 
@@ -1430,7 +1453,8 @@ Public PDF URL
   class="mono"
   readonly
   value=""
-  placeholder="Your PDF URL will appear here">
+  placeholder="Your PDF URL will appear here"
+  style="display:none;">
 
 <button
   class="copy-btn"
@@ -1490,6 +1514,12 @@ Your QR code
 Choose a PDF and upload it to generate the QR code.
 </div>
 
+
+<div class="loading-state" id="loadingState" aria-live="polite">
+  <div class="loader" aria-hidden="true"></div>
+  <div class="loading-title" id="loadingTitle">Uploading PDF…</div>
+  <div class="loading-text" id="loadingText">Please wait while your PDF is uploaded and becomes available.</div>
+</div>
 </div>
 
 
@@ -2014,6 +2044,15 @@ const downloadBtn =
 const testLink =
   document.getElementById('testLink');
 
+const loadingState =
+  document.getElementById('loadingState');
+
+const loadingTitle =
+  document.getElementById('loadingTitle');
+
+const loadingText =
+  document.getElementById('loadingText');
+
 
 /*
 ========================================================
@@ -2076,6 +2115,11 @@ function clearOutput(){
   urlInput.value =
     '';
 
+  urlInput.style.display =
+    'none';
+
+  loadingState.classList.remove('show');
+
   errorMsg.classList.remove('show');
 
   successMsg.classList.remove('show');
@@ -2122,6 +2166,62 @@ function showSuccess(message){
     message;
 
   successMsg.classList.add('show');
+
+}
+
+
+/*
+========================================================
+GITHUB PAGES AVAILABILITY CHECK
+========================================================
+*/
+
+async function waitForPdfReady(url, options = {}){
+
+  const timeoutMs =
+    options.timeoutMs || 120000;
+
+  const intervalMs =
+    options.intervalMs || 2500;
+
+  const startedAt =
+    Date.now();
+
+  while(Date.now() - startedAt < timeoutMs){
+
+    try{
+
+      const response =
+        await fetch(
+          url,
+          {
+            method:'GET',
+            cache:'no-store',
+            redirect:'follow'
+          }
+        );
+
+      if(response.ok){
+        return true;
+      }
+
+    }catch(error){
+      // GitHub Pages may temporarily be unavailable while deploying.
+    }
+
+    loadingTitle.textContent =
+      'Publishing PDF…';
+
+    loadingText.textContent =
+      'GitHub Pages is preparing your PDF. Checking again in a moment…';
+
+    await new Promise(
+      resolve => setTimeout(resolve, intervalMs)
+    );
+
+  }
+
+  return false;
 
 }
 
@@ -2483,6 +2583,17 @@ generateBtn.addEventListener(
     generateBtn.textContent =
       'Uploading PDF…';
 
+    loadingState.classList.add('show');
+    loadingTitle.textContent =
+      'Uploading PDF…';
+    loadingText.textContent =
+      'Sending your PDF to GitHub storage. The link and QR code will appear only when the PDF is live.';
+
+    urlInput.value = '';
+    urlInput.style.display = 'none';
+    downloadBtn.disabled = true;
+    testLink.style.pointerEvents = 'none';
+    testLink.style.opacity = '.45';
 
     try{
 
@@ -2550,23 +2661,63 @@ generateBtn.addEventListener(
       const pdfUrl =
         data.pdfUrl;
 
+      /*
+       * Keep the URL and QR code hidden until GitHub Pages
+       * actually serves the uploaded PDF.
+       */
+      urlInput.value = '';
+      urlInput.style.display = 'none';
+
+      loadingState.classList.add('show');
+      loadingTitle.textContent =
+        'PDF uploaded — waiting for GitHub Pages…';
+      loadingText.textContent =
+        'Your PDF is in the GitHub repository. We are waiting until the public PDF link is actually working.';
+
+      showStatus(
+        'PDF uploaded. Waiting for GitHub Pages to make the PDF available…'
+      );
+
+      const ready =
+        await waitForPdfReady(
+          pdfUrl,
+          {
+            timeoutMs:120000,
+            intervalMs:2500
+          }
+        );
+
+      if(!ready){
+
+        loadingState.classList.remove('show');
+
+        throw new Error(
+          'The PDF was uploaded, but GitHub Pages did not become ready within 2 minutes. Please try again in a moment.'
+        );
+
+      }
+
+      /*
+       * GitHub Pages is confirmed ready — reveal everything now.
+       */
+      loadingState.classList.remove('show');
 
       urlInput.value =
         pdfUrl;
 
+      urlInput.style.display =
+        '';
 
       showStatus(
-        'PDF uploaded to GitHub. Generating your QR code…'
+        'PDF is live on GitHub Pages. Generating your QR code…'
       );
-
 
       renderQr(
         pdfUrl
       );
 
-
       showSuccess(
-        'PDF uploaded successfully. Your QR code is ready.'
+        'PDF is ready. Your PDF link and QR code are now available.'
       );
 
 
@@ -2593,6 +2744,11 @@ generateBtn.addEventListener(
 
       }
 
+
+      loadingState.classList.remove('show');
+
+      urlInput.value = '';
+      urlInput.style.display = 'none';
 
       showError(
         message
