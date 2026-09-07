@@ -621,6 +621,69 @@ section{
 .loading-title{color:var(--ink);font-weight:600;}
 .loading-text{color:var(--ink-dim);font-size:.88rem;max-width:34ch;}
 
+/* 60-second upload animation */
+.upload-progress{
+  display:none;
+  margin-top:12px;
+  width:100%;
+  max-width:520px;
+}
+.upload-progress.show{display:block;}
+.upload-progress-track{
+  position:relative;
+  height:12px;
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(14,42,74,.10);
+  border:1px solid rgba(14,42,74,.10);
+}
+.upload-progress-fill{
+  width:0%;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,var(--mint),#6ee7c8,var(--mint));
+  background-size:200% 100%;
+  animation:progressGlow 1.2s linear infinite;
+  transition:width .1s linear;
+}
+@keyframes progressGlow{to{background-position:200% 0;}}
+.upload-progress-runner{
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translate(-50%,-55%);
+  font-size:24px;
+  line-height:1;
+  transition:left .1s linear;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.15));
+}
+.upload-progress-info{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:7px;
+  font-size:.78rem;
+  color:var(--ink-dim);
+}
+.upload-progress-time{font-weight:700;color:var(--ink);}
+.btn-loading-content{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  width:100%;
+}
+.btn-loading-runner{
+  display:inline-block;
+  animation:buttonRunner 1s ease-in-out infinite;
+}
+@keyframes buttonRunner{
+  0%,100%{transform:translateX(-5px) rotate(-3deg);}
+  50%{transform:translateX(5px) rotate(3deg);}
+}
+
 .error-msg{
   color:var(--laser);
 
@@ -1477,6 +1540,17 @@ Upload PDF & Generate QR
 
 </button>
 
+<div class="upload-progress" id="uploadProgress" aria-hidden="true" aria-live="polite">
+  <div class="upload-progress-track">
+    <div class="upload-progress-fill" id="uploadProgressFill"></div>
+    <div class="upload-progress-runner" id="uploadProgressRunner" aria-hidden="true">🏃‍♂️</div>
+  </div>
+  <div class="upload-progress-info">
+    <span id="uploadProgressText">Preparing your PDF…</span>
+    <span class="upload-progress-time" id="uploadProgressTime">0 / 60 sec</span>
+  </div>
+</div>
+
 
 <div
   class="status-box"
@@ -2053,6 +2127,22 @@ const loadingTitle =
 const loadingText =
   document.getElementById('loadingText');
 
+const uploadProgress =
+  document.getElementById('uploadProgress');
+
+const uploadProgressFill =
+  document.getElementById('uploadProgressFill');
+
+const uploadProgressRunner =
+  document.getElementById('uploadProgressRunner');
+
+const uploadProgressText =
+  document.getElementById('uploadProgressText');
+
+const uploadProgressTime =
+  document.getElementById('uploadProgressTime');
+
+
 
 /*
 ========================================================
@@ -2580,8 +2670,41 @@ generateBtn.addEventListener(
     generateBtn.disabled =
       true;
 
-    generateBtn.textContent =
-      'Uploading PDF…';
+    const uploadStartedAt =
+      Date.now();
+
+    const minimumWaitMs =
+      60000;
+
+    let progressTimer = null;
+
+    const updateUploadProgress = () => {
+
+      const elapsed = Date.now() - uploadStartedAt;
+      const percent = Math.min(100, (elapsed / minimumWaitMs) * 100);
+      const seconds = Math.min(60, Math.floor(elapsed / 1000));
+
+      uploadProgressFill.style.width = percent + '%';
+      uploadProgressRunner.style.left = percent + '%';
+      uploadProgressTime.textContent = seconds + ' / 60 sec';
+
+      if(seconds < 60){
+        uploadProgressText.textContent =
+          'Please wait while we prepare your PDF…';
+      }else{
+        uploadProgressText.textContent =
+          '60 seconds complete — finalizing your PDF…';
+      }
+
+    };
+
+    uploadProgress.classList.add('show');
+    uploadProgress.setAttribute('aria-hidden','false');
+    updateUploadProgress();
+    progressTimer = setInterval(updateUploadProgress, 100);
+
+    generateBtn.innerHTML =
+      '<span class="btn-loading-content"><span class="btn-loading-runner">🏃‍♂️</span><span>Please wait…</span></span>';
 
     loadingState.classList.add('show');
     loadingTitle.textContent =
@@ -2697,8 +2820,20 @@ generateBtn.addEventListener(
 
       }
 
+      /* Always keep the user-facing animation running for at least 60 seconds. */
+      const remainingWaitMs =
+        Math.max(0, minimumWaitMs - (Date.now() - uploadStartedAt));
+
+      if(remainingWaitMs > 0){
+        uploadProgressText.textContent =
+          'Almost ready — finishing the 60-second preparation…';
+        await new Promise(resolve => setTimeout(resolve, remainingWaitMs));
+      }
+
+      updateUploadProgress();
+
       /*
-       * GitHub Pages is confirmed ready — reveal everything now.
+       * GitHub Pages is confirmed ready and the 60-second animation is complete — reveal everything now.
        */
       loadingState.classList.remove('show');
 
@@ -2722,6 +2857,11 @@ generateBtn.addEventListener(
 
 
     }catch(error){
+
+      if(progressTimer){
+        clearInterval(progressTimer);
+        progressTimer = null;
+      }
 
       console.error(
         'Upload error:',
@@ -2758,6 +2898,14 @@ generateBtn.addEventListener(
 
 
     }finally{
+
+      if(progressTimer){
+        clearInterval(progressTimer);
+        progressTimer = null;
+      }
+
+      uploadProgress.classList.remove('show');
+      uploadProgress.setAttribute('aria-hidden','true');
 
       generateBtn.disabled =
         false;
