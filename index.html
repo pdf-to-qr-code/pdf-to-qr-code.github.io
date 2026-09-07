@@ -2746,6 +2746,8 @@ generateBtn.addEventListener(
 
 
       loadingState.classList.remove('show');
+      uploadProgress.classList.remove('show');
+      uploadProgress.setAttribute('aria-hidden','true');
 
       urlInput.value = '';
       urlInput.style.display = 'none';
