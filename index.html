@@ -647,7 +647,16 @@ section{
   transition:width .1s linear;
 }
 @keyframes progressGlow{to{background-position:200% 0;}}
-
+.upload-progress-runner{
+  position:absolute;
+  left:0;
+  top:50%;
+  transform:translate(-50%,-55%);
+  font-size:24px;
+  line-height:1;
+  transition:left .1s linear;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.15));
+}
 .upload-progress-info{
   display:flex;
   justify-content:space-between;
@@ -1534,6 +1543,7 @@ Upload PDF & Generate QR
 <div class="upload-progress" id="uploadProgress" aria-hidden="true" aria-live="polite">
   <div class="upload-progress-track">
     <div class="upload-progress-fill" id="uploadProgressFill"></div>
+    <div class="upload-progress-runner" id="uploadProgressRunner" aria-hidden="true">🏃‍♂️</div>
   </div>
   <div class="upload-progress-info">
     <span id="uploadProgressText">Preparing your PDF…</span>
