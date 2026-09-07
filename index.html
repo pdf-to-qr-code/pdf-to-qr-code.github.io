@@ -55,7 +55,7 @@
     },
     {
       "@type": "Question",
-      "name": "Does this tool upload my PDF anywhere?",
+      "name": "Does this tool upload my PDF?",
       "acceptedAnswer": { "@type": "Answer", "text": "No. The PDF is read locally in your browser to check its size and generate the QR code. Nothing is sent to a server unless you separately choose to upload it yourself, for example to your own GitHub repository." }
     },
     {
@@ -355,29 +355,25 @@
           </div>
 
           <div class="field">
-            <label for="slugInput">Suggested filename (use this exact name)</label>
+            <label for="slugInput">Filename</label>
             <div class="field-row">
               <input type="text" id="slugInput" class="mono" readonly value="">
               <button class="copy-btn" id="copySlug" type="button">Copy</button>
             </div>
           </div>
 
-          <h3 style="margin-top:22px;"><span class="step-num">2</span> Choose a mode</h3>
-          <div class="mode-toggle">
-            <button class="mode-btn active" id="modeLinkBtn" type="button">Link to hosted PDF</button>
-            <button class="mode-btn" id="modeEmbedBtn" type="button" disabled>Embed directly</button>
-          </div>
-          <p class="mode-note" id="modeNote">Recommended for any file over ~1.5 KB — which is nearly every real PDF.</p>
+          <h3 style="margin-top:22px;"><span class="step-num">2</span> Upload & generate</h3>
+          <p class="mode-note">Click the button below. Your PDF will be uploaded automatically to your PDF storage repository, then the returned public URL will be encoded into the QR code.</p>
 
           <div class="field" id="urlField">
-            <label for="urlInput">Public URL where this PDF will be hosted</label>
+            <label for="urlInput">Public PDF URL</label>
             <div class="field-row">
-              <input type="text" id="urlInput" class="mono" value="">
+              <input type="text" id="urlInput" class="mono" readonly value="" placeholder="Your PDF URL will appear here">
               <button class="copy-btn" id="copyUrl" type="button">Copy</button>
             </div>
           </div>
 
-          <button class="btn btn-primary generate-btn" id="generateBtn" type="button">Generate QR code</button>
+          <button class="btn btn-primary generate-btn" id="generateBtn" type="button">Upload PDF & Generate QR</button>
           <div class="error-msg" id="errorMsg"></div>
         </div>
 
@@ -476,16 +472,16 @@
           <div class="faq-a">Only if the PDF is very small, roughly under 1.5 KB. QR codes top out around 2–3 KB of raw data, and most real PDFs are far larger. For anything bigger, the QR code holds a link to the PDF instead of the file itself, which is what this tool does by default.</div>
         </div>
         <div class="faq-item">
-          <div class="faq-q">Does this tool upload my PDF anywhere?<span class="chev">+</span></div>
-          <div class="faq-a">No. The PDF is read locally in your browser to check its size and generate the QR code. Nothing is sent to a server unless you separately choose to upload it yourself — for example to your own GitHub repository.</div>
+          <div class="faq-q">Does this tool upload my PDF?<span class="chev">+</span></div>
+          <div class="faq-a">Yes. When you click “Upload PDF & Generate QR”, the PDF is sent to your Render backend, which stores it in your PDF repository.</div>
         </div>
         <div class="faq-item">
           <div class="faq-q">Why does my QR code lead to a broken link?<span class="chev">+</span></div>
-          <div class="faq-a">The usual causes: the PDF hasn't been committed yet, the filename doesn't exactly match — including capitalization — GitHub Pages hasn't finished redeploying (give it a minute or two), or the folder path in the URL doesn't match where the file actually lives.</div>
+          <div class="faq-a">The usual causes are an incorrect Render upload URL, a backend configuration problem, a backend/GitHub permission issue, or a public PDF URL that is not configured correctly.</div>
         </div>
         <div class="faq-item">
           <div class="faq-q">What filename should I give my PDF?<span class="chev">+</span></div>
-          <div class="faq-a">Lowercase letters, numbers, and hyphens only, no spaces, and keep the .pdf extension. The generator suggests a safe filename automatically — that exact name is what needs to match the URL encoded in the QR code.</div>
+          <div class="faq-a">The backend creates a unique filename automatically based on the selected PDF name.</div>
         </div>
         <div class="faq-item">
           <div class="faq-q">Can I use a custom domain instead of github.io?<span class="chev">+</span></div>
@@ -514,11 +510,16 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
 <script>
-const MAX_EMBED_BYTES = 1500; // conservative cutoff for reliable, scannable embedded QR codes
+/*
+ * PDF upload configuration
+ * Replace the URL below with your Render service URL + /upload.
+ * Example:
+ * https://pdf-storage-backend.onrender.com/upload
+ */
+const UPLOAD_API = 'https://pdf-storage-backend.onrender.com/upload';
 
 let currentFile = null;
 let currentSlug = '';
-let mode = 'link'; // 'link' | 'embed'
 
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
@@ -528,10 +529,6 @@ const fileSizeBadge = document.getElementById('fileSizeBadge');
 const fileValidBadge = document.getElementById('fileValidBadge');
 const slugInput = document.getElementById('slugInput');
 const urlInput = document.getElementById('urlInput');
-const urlField = document.getElementById('urlField');
-const modeLinkBtn = document.getElementById('modeLinkBtn');
-const modeEmbedBtn = document.getElementById('modeEmbedBtn');
-const modeNote = document.getElementById('modeNote');
 const generateBtn = document.getElementById('generateBtn');
 const errorMsg = document.getElementById('errorMsg');
 const qrHolder = document.getElementById('qrHolder');
@@ -553,61 +550,41 @@ function slugify(name){
   return slug + '.pdf';
 }
 
-function defaultUrlFor(slug){
-  try{
-    if(location.origin && location.origin.startsWith('http')){
-      return location.origin + '/files/' + slug;
-    }
-  }catch(e){}
-  return 'https://yourname.github.io/yourrepo/files/' + slug;
-}
-
-function setMode(next){
-  if(next === 'embed' && modeEmbedBtn.disabled) return;
-  mode = next;
-  modeLinkBtn.classList.toggle('active', mode === 'link');
-  modeEmbedBtn.classList.toggle('active', mode === 'embed');
-  urlField.style.display = mode === 'link' ? '' : 'none';
-  modeNote.textContent = mode === 'link'
-    ? 'Recommended for any file over ~1.5 KB — which is nearly every real PDF.'
-    : 'This file is small enough to embed directly inside the QR code. No hosting needed — scanning it opens the PDF straight from the code itself. Support for opening embedded PDFs directly varies a little between scanner apps.';
-  clearOutput();
-}
-modeLinkBtn.addEventListener('click', () => setMode('link'));
-modeEmbedBtn.addEventListener('click', () => setMode('embed'));
-
 function clearOutput(){
-  qrHolder.innerHTML = '<div class="qr-placeholder">Choose a PDF and generate to see it here.</div>';
+  qrHolder.innerHTML = '<div class="qr-placeholder">Choose a PDF, then upload it to generate the QR code.</div>';
   downloadBtn.disabled = true;
   testLink.style.pointerEvents = 'none';
   testLink.style.opacity = '0.45';
+  testLink.href = '#';
+  urlInput.value = '';
   errorMsg.classList.remove('show');
+}
+
+function showError(msg){
+  errorMsg.textContent = msg;
+  errorMsg.classList.add('show');
 }
 
 function handleFile(file){
   if(!file) return;
+
   currentFile = file;
   currentSlug = slugify(file.name);
 
   fileInfo.classList.add('show');
   fileName.textContent = file.name;
   fileSizeBadge.textContent = humanSize(file.size);
-  fileSizeBadge.className = 'badge ' + (file.size <= MAX_EMBED_BYTES ? 'ok' : 'warn');
-
+  fileSizeBadge.className = 'badge ' + (file.size <= 10 * 1024 * 1024 ? 'ok' : 'bad');
   slugInput.value = currentSlug;
-  urlInput.value = defaultUrlFor(currentSlug);
 
-  const canEmbed = file.size <= MAX_EMBED_BYTES;
-  modeEmbedBtn.disabled = !canEmbed;
-  if(!canEmbed && mode === 'embed') setMode('link');
-
-  // Validate PDF signature (%PDF-)
   fileValidBadge.textContent = 'Checking…';
   fileValidBadge.className = 'badge warn';
+
   const slice = file.slice(0, 5);
   slice.arrayBuffer().then(buf => {
     const bytes = new Uint8Array(buf);
     const header = String.fromCharCode(...bytes);
+
     if(header === '%PDF-'){
       fileValidBadge.textContent = 'Looks valid';
       fileValidBadge.className = 'badge ok';
@@ -624,57 +601,117 @@ function handleFile(file){
 }
 
 dropzone.addEventListener('click', () => fileInput.click());
-dropzone.addEventListener('keydown', (e) => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); fileInput.click(); } });
+dropzone.addEventListener('keydown', (e) => {
+  if(e.key === 'Enter' || e.key === ' '){
+    e.preventDefault();
+    fileInput.click();
+  }
+});
 fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-['dragenter','dragover'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.add('drag'); }));
-['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, (e) => { e.preventDefault(); dropzone.classList.remove('drag'); }));
+['dragenter','dragover'].forEach(evt => dropzone.addEventListener(evt, (e) => {
+  e.preventDefault();
+  dropzone.classList.add('drag');
+}));
+['dragleave','drop'].forEach(evt => dropzone.addEventListener(evt, (e) => {
+  e.preventDefault();
+  dropzone.classList.remove('drag');
+}));
 dropzone.addEventListener('drop', (e) => {
   const f = e.dataTransfer.files[0];
   if(f) handleFile(f);
 });
 
 function copyText(text, btn){
+  if(!text) return;
   const original = btn.textContent;
-  const done = () => { btn.textContent = 'Copied'; setTimeout(() => btn.textContent = original, 1200); };
+  const done = () => {
+    btn.textContent = 'Copied';
+    setTimeout(() => btn.textContent = original, 1200);
+  };
+
   if(navigator.clipboard && navigator.clipboard.writeText){
     navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
   } else {
     fallbackCopy(text, done);
   }
 }
+
 function fallbackCopy(text, done){
   const ta = document.createElement('textarea');
-  ta.value = text; document.body.appendChild(ta); ta.select();
-  try{ document.execCommand('copy'); done(); }catch(e){}
+  ta.value = text;
+  document.body.appendChild(ta);
+  ta.select();
+  try{
+    document.execCommand('copy');
+    done();
+  }catch(e){}
   document.body.removeChild(ta);
 }
-document.getElementById('copySlug').addEventListener('click', () => copyText(slugInput.value, document.getElementById('copySlug')));
-document.getElementById('copyUrl').addEventListener('click', () => copyText(urlInput.value, document.getElementById('copyUrl')));
 
-function showError(msg){
-  errorMsg.textContent = msg;
-  errorMsg.classList.add('show');
-}
+document.getElementById('copySlug').addEventListener('click', () =>
+  copyText(slugInput.value, document.getElementById('copySlug'))
+);
 
-generateBtn.addEventListener('click', () => {
+document.getElementById('copyUrl').addEventListener('click', () =>
+  copyText(urlInput.value, document.getElementById('copyUrl'))
+);
+
+generateBtn.addEventListener('click', async () => {
   errorMsg.classList.remove('show');
-  if(!currentFile){ showError('Choose a PDF file first.'); return; }
+
+  if(!currentFile){
+    showError('Choose a PDF file first.');
+    return;
+  }
+
+  if(UPLOAD_API.includes('PASTE_YOUR_RENDER_URL_HERE')){
+    showError('Set your Render upload URL in the UPLOAD_API constant first.');
+    return;
+  }
+
+  if(currentFile.size > 10 * 1024 * 1024){
+    showError('PDF is too large. Maximum size is 10 MB.');
+    return;
+  }
 
   if(typeof QRious === 'undefined'){
     showError('The QR library failed to load. Check your internet connection and refresh the page.');
     return;
   }
 
-  if(mode === 'link'){
-    const url = urlInput.value.trim();
-    if(!url){ showError('Enter the URL where this PDF will be hosted.'); return; }
-    renderQr(url);
-  } else {
-    const reader = new FileReader();
-    reader.onload = () => renderQr(reader.result);
-    reader.onerror = () => showError('Could not read the file for embedding.');
-    reader.readAsDataURL(currentFile);
+  generateBtn.disabled = true;
+  generateBtn.textContent = 'Uploading PDF…';
+
+  try{
+    const formData = new FormData();
+    formData.append('pdf', currentFile);
+
+    const response = await fetch(UPLOAD_API, {
+      method: 'POST',
+      body: formData
+    });
+
+    let data;
+    try {
+      data = await response.json();
+    } catch(e) {
+      throw new Error('The server returned an invalid response.');
+    }
+
+    if(!response.ok || !data.success || !data.pdfUrl){
+      throw new Error(data.error || 'PDF upload failed.');
+    }
+
+    urlInput.value = data.pdfUrl;
+    renderQr(data.pdfUrl);
+
+  }catch(error){
+    console.error('Upload error:', error);
+    showError(error.message || 'Could not upload the PDF. Please try again.');
+  }finally{
+    generateBtn.disabled = false;
+    generateBtn.textContent = 'Upload PDF & Generate QR';
   }
 });
 
@@ -687,13 +724,13 @@ function renderQr(value){
       element: canvas,
       value: value,
       size: 260,
-      level: mode === 'embed' ? 'L' : 'M',
+      level: 'M',
       background: '#ffffff',
       foreground: '#0E2A4A'
     });
   }catch(e){
     qrHolder.innerHTML = '<div class="qr-placeholder">Could not generate a QR code from this data.</div>';
-    showError('This data is too large to fit in a QR code. Try the link method instead of embedding.');
+    showError('Could not generate the QR code from the returned PDF URL.');
     return;
   }
   downloadBtn.disabled = false;
@@ -703,14 +740,9 @@ function renderQr(value){
     a.download = currentSlug.replace(/\.pdf$/i, '') + '-qr.png';
     a.click();
   };
-  if(mode === 'link'){
-    testLink.href = value;
-    testLink.style.pointerEvents = 'auto';
-    testLink.style.opacity = '1';
-  } else {
-    testLink.style.pointerEvents = 'none';
-    testLink.style.opacity = '0.45';
-  }
+  testLink.href = value;
+  testLink.style.pointerEvents = 'auto';
+  testLink.style.opacity = '1';
 }
 
 document.querySelectorAll('.faq-item').forEach(item => {
